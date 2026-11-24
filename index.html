@@ -201,6 +201,49 @@ dialog::backdrop{background:rgba(2,7,14,.72);backdrop-filter:none}.big{text-shad
 @media(max-width:700px){.main{width:calc(100% - 32px);padding-bottom:56px}.topbar{min-height:70px;padding-right:76px}.menu-toggle{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:transparent;padding:8px 11px;color:var(--ink);font-size:12px}.nav{display:none;position:absolute;top:calc(100% - 1px);left:0;right:0;z-index:30;flex-direction:column;align-items:stretch;gap:2px;border:1px solid var(--line);border-radius:0 0 10px 10px;background:var(--bg);padding:8px}.nav.open{display:flex}.nav button{width:100%;padding:11px 10px}.header-actions{margin-left:auto}.sign-in{padding:8px 10px;font-size:12px}.theme{top:18px}.hero{grid-template-columns:1fr;gap:28px;margin:42px 0 36px}.hero h1{font-size:clamp(46px,12vw,66px)}.featured{max-width:560px}.featured-placeholder{min-height:230px}.stats{margin-top:24px}.stat{min-height:69px;padding:10px 8px}.stat span{font-size:8px}.stat strong{font-size:19px}.head{gap:14px}.head .cover{width:102px}.ring{width:60px;height:60px}.ring b{font-size:16px}.vs{gap:14px}}
 @media(max-width:500px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{flex-direction:column;align-items:flex-start;justify-content:center;gap:3px}.stat strong{font-size:18px}.stat span{line-height:1.2}.featured-card{padding:14px}.featured-album{grid-template-columns:94px minmax(0,1fr);gap:13px;padding:16px 0}.featured-copy h2{font-size:21px}.featured-bottom{align-items:flex-end}.featured-score strong{font-size:24px}.btn{padding:8px 10px;font-size:11px}.nick{align-items:flex-start;flex-direction:column;gap:6px}.nick input{width:100%}.empty-note{align-items:flex-start;flex-direction:column}.empty-note strong{text-align:left}.head{align-items:flex-start}.head .cover{width:78px}.ring{width:50px;height:50px}.ring b{font-size:14px}.tracks{grid-template-columns:1fr}}
 </style>
+<style>
+/* Home keeps the featured introduction as the only first-screen content. */
+.hero{min-height:calc(100svh - 154px);margin:0;align-content:center}
+.hero-copy{padding:28px 0}
+.journal-intro,.recent-section,.ratings-page,.rate-page{max-width:940px;margin:0 auto}
+.journal-intro{display:grid;grid-template-columns:minmax(0,1fr) 170px;align-items:end;column-gap:48px;row-gap:16px;margin-top:20px;padding:78px 0 82px;border-top:1px solid var(--line)}
+.journal-intro .eyebrow{grid-column:1/-1}
+.journal-intro h2{margin:0;color:var(--ink);font:600 clamp(34px,5vw,58px)/1.04 "DM Sans",system-ui,sans-serif;letter-spacing:-.055em}
+.journal-intro h2 em{color:var(--accent);font-style:normal}
+.journal-intro p{max-width:490px;margin:4px 0 0;color:var(--soft);font-size:14px;line-height:1.8}
+.journal-intro .btn{justify-self:end;min-width:152px;padding:12px 17px}
+.recent-section{padding:50px 0 72px;border-top:1px solid var(--line)}
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}
+.section-heading h2,.section-title{margin:8px 0 0;color:var(--ink);font:600 25px/1.15 "DM Sans",system-ui,sans-serif;letter-spacing:-.035em}
+.text-link{border:0;background:transparent;padding:8px 0;color:var(--soft);font:500 12px "DM Sans",system-ui,sans-serif}
+.text-link span{margin-left:4px;color:var(--accent)}
+.grid{grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:28px 18px}
+.tile{display:block;width:100%;min-width:0}
+.tile-notes{margin-top:9px;padding-top:7px;border-top:1px solid var(--line);text-align:left}
+.tile-note{display:-webkit-box;overflow:hidden;margin:0 0 7px;color:var(--soft);font-size:11px;line-height:1.45;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.tile-note span{display:block;overflow:hidden;margin-bottom:2px;color:var(--ink);font-size:10px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.tile-note-more,.tile-note-empty{margin:8px 0 0;color:var(--soft);font-size:10px;line-height:1.4}
+.tile-note-empty{padding-top:6px;border-top:1px solid var(--line)}
+.ratings-page,.rate-page{padding:62px 0 80px}
+.ratings-page h1,.rate-page h1{margin:14px 0 11px;font-size:clamp(40px,6vw,66px)}
+.section-lede{max-width:560px;margin:0;color:var(--soft);font-size:14px;line-height:1.75}
+.ratings-page .stats{margin:34px 0 42px}
+.ratings-page .section-title{margin-bottom:20px}
+.ratings-page .tile-note{max-width:100%}
+.rate-page{max-width:700px}
+.back-home{margin-bottom:30px}
+.rate-page .nick{margin:32px 0 24px}
+.rate-page .search-block{max-width:none;margin-top:0}
+.rate-page .search-block label{display:block;margin-bottom:8px;color:var(--ink);font-size:12px;font-weight:600}
+.rate-page #q{padding:14px 15px;font-size:14px}
+.empty-note{flex-wrap:wrap}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+.reveal.is-visible{opacity:1;transform:translateY(0)}
+@media(max-width:900px){.hero{min-height:calc(100svh - 150px)}}
+@media(max-width:700px){.hero{min-height:calc(100svh - 126px);margin:0}.hero-copy{padding:20px 0 0}.journal-intro{grid-template-columns:1fr;gap:15px;margin-top:4px;padding:54px 0}.journal-intro .eyebrow{grid-column:auto}.journal-intro .btn{justify-self:start;margin-top:6px}.recent-section{padding:36px 0 52px}.ratings-page,.rate-page{padding:42px 0 58px}.ratings-page .stats{margin:26px 0 32px}}
+@media(max-width:500px){.hero{min-height:calc(100svh - 130px)}.journal-intro h2{font-size:39px}.section-heading{align-items:start;flex-direction:column;gap:6px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 13px}.tile-note{font-size:10px}.ratings-page .stats{grid-template-columns:repeat(3,minmax(0,1fr))}.ratings-page .stat{flex-direction:column;align-items:flex-start;justify-content:center;gap:3px}}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
 </head>
 <body>
 <button class="theme" id="theme" aria-label="Switch theme (dark / light)"><span data-t="dark">☾</span><span data-t="light">☀</span></button>
@@ -283,7 +326,7 @@ function shareLink(a){
 }
 
 /* ---------- home + search ---------- */
-var timer=null,seq=0;
+var timer=null,seq=0,albumReturnHash="";
 function shell(content,active){
   return '<div class="shell"><main class="main"><header class="topbar"><button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav">Menu</button><nav class="nav" id="mobileNav" aria-label="Main navigation"><button data-nav="discover" class="'+(active==="discover"?"active":"")+'">Discover</button><button data-nav="ratings" class="'+(active==="ratings"?"active":"")+'">My ratings</button><button data-nav="versus" class="'+(active==="versus"?"active":"")+'">Album vs album</button></nav><div class="header-actions"><button class="sign-in" data-nav="signin">Sign in</button></div></header><div class="page-content">'+content+'</div></main></div>';
 }
@@ -299,36 +342,58 @@ function bindMenu(){
   var toggle=$("#menuToggle"),nav=$("#mobileNav");
   if(toggle&&nav)toggle.onclick=function(){var open=nav.classList.toggle("open");toggle.setAttribute("aria-expanded",String(open));toggle.textContent=open?"Close":"Menu"};
 }
+function setupReveals(){
+  var nodes=app.querySelectorAll(".reveal");
+  if(!("IntersectionObserver" in window)){nodes.forEach(function(n){n.classList.add("is-visible")});return}
+  var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add("is-visible");io.unobserve(e.target)}})},{threshold:.12,rootMargin:"0px 0px -36px 0px"});
+  nodes.forEach(function(n){io.observe(n)});
+}
+function albumTile(a){
+  var m=avg(a),notes=a.tracks.filter(function(t){return t.r!=null&&t.note&&t.note.trim()});
+  var excerpt=notes.slice(0,2).map(function(t){return'<p class="tile-note"><span>'+esc(t.name)+'</span>'+esc(t.note)+'</p>'}).join("");
+  var more=notes.length>2?'<p class="tile-note-more">+'+(notes.length-2)+' more '+(notes.length-2===1?'note':'notes')+'</p>':'';
+  return'<button class="tile" data-id="'+esc(a.id)+'"><div class="cw">'+cover(a)+'<span class="bd">'+m.toFixed(1)+'</span></div><div class="t">'+esc(a.title)+'</div><div class="a">'+esc(a.artist)+'</div>'+(excerpt?'<div class="tile-notes">'+excerpt+more+'</div>':'<p class="tile-note-empty">No track notes yet</p>')+'</button>';
+}
 function home(ratingsOnly){
-  cur=null;
+  cur=null;albumReturnHash=ratingsOnly?"#ratings":"";
   var mine=Object.keys(store.mine).map(function(k){return store.mine[k]}).filter(function(a){return avg(a)!=null}).sort(function(a,b){return(b.u||0)-(a.u||0)});
   var trackCount=mine.reduce(function(n,a){return n+a.tracks.filter(function(t){return t.r!=null}).length},0);
   var allScores=[];mine.forEach(function(a){a.tracks.forEach(function(t){if(t.r!=null)allScores.push(t.r)})});
   var overall=allScores.length?(allScores.reduce(function(a,b){return a+b},0)/allScores.length).toFixed(1):"—";
-  var title=ratingsOnly?'Your <em>ratings.</em>':'Albums, rated<br><em>your way.</em>';
-  var desc=ratingsOnly?'Your personal record of the albums you’ve listened to.':'Find an album, rate it track by track, and keep a record of what stays with you.';
-  var h='<section class="hero"><div class="hero-copy"><div class="eyebrow">A PERSONAL ALBUM RATING JOURNAL</div><h1>'+title+'</h1><p>'+desc+'</p>';
-  if(!ratingsOnly){
-    h+='<div class="search-block"><label for="q">Find an album</label><input id="q" type="search" placeholder="Search albums or artists — try Yeat" autocomplete="off"><div id="res"></div></div>';
-  }
-  h+='</div>';
-  if(!ratingsOnly)h+='<aside class="featured" id="featured" aria-live="polite"><div class="featured-placeholder"><span class="eyebrow">POPULAR &amp; RECENT</span><p>Finding a current album worth hearing…</p></div></aside>';
-  h+='</section>';
-  if(!ratingsOnly){
+  var h="";
+  if(ratingsOnly){
+    h+='<section class="ratings-page"><div class="eyebrow">YOUR LISTENING HISTORY</div><h1>Your <em>ratings.</em></h1><p class="section-lede">A personal record of the albums and tracks you’ve rated.</p>';
     h+='<div class="stats"><div class="stat"><span>ALBUMS RATED</span><strong>'+mine.length+'</strong></div><div class="stat"><span>TRACKS RATED</span><strong>'+trackCount+'</strong></div><div class="stat"><span>YOUR AVERAGE</span><strong>'+overall+'</strong></div></div>';
-    h+='<div class="nick"><label for="nick">Name on shared ratings</label><input id="nick" maxlength="24" placeholder="Listener" value="'+esc(store.nick)+'"></div>';
+    if(mine.length)h+='<h2 class="section-title">Rated albums</h2><div class="grid">'+mine.map(albumTile).join("")+'</div>';
+    else h+='<div class="empty-note"><span>NO RECORDS YET</span><strong>Your album ratings<br>will live here.</strong><button class="btn" id="emptyRate">Rate an album</button></div>';
+    h+='</section>';
+  }else{
+    h+='<section class="hero"><div class="hero-copy"><div class="eyebrow">A PERSONAL ALBUM RATING JOURNAL</div><h1>Albums, rated<br><em>your way.</em></h1><p>Find the records that stay with you. Rate every track, leave a private note, and build a collection that feels like yours.</p></div>';
+    h+='<aside class="featured" id="featured" aria-live="polite"><div class="featured-placeholder"><span class="eyebrow">POPULAR &amp; RECENT</span><p>Finding a current album worth hearing…</p></div></aside></section>';
+    h+='<section class="journal-intro reveal"><div class="eyebrow">YOUR LISTENING, IN YOUR WORDS</div><h2>A score is only<br><em>part of the story.</em></h2><p>Rate an album track by track and add a note to the moments you want to remember. Keep every rating together in your own music journal.</p><button class="btn" id="rateAlbums">Rate albums</button></section>';
+    h+='<section class="recent-section reveal"><div class="section-heading"><div><div class="eyebrow">FROM YOUR JOURNAL</div><h2>Recently rated</h2></div><button class="text-link" id="allRatings">View all ratings <span>→</span></button></div>';
+    if(mine.length)h+='<div class="grid">'+mine.slice(0,6).map(albumTile).join("")+'</div>';
+    else h+='<div class="empty-note"><span>NO RECORDS YET</span><strong>Your first album rating starts here.</strong><button class="btn" id="emptyRate">Rate an album</button></div>';
+    h+='</section>';
   }
-  if(mine.length)h+='<h3>'+(ratingsOnly?"Rated albums":"Recently rated")+'</h3><div class="grid">'+mine.map(function(a){var m=avg(a);return'<button class="tile" data-id="'+esc(a.id)+'"><div class="cw">'+cover(a)+'<span class="bd">'+m.toFixed(1)+'</span></div><div class="t">'+esc(a.title)+'</div><div class="a">'+esc(a.artist)+'</div></button>'}).join("")+'</div>';
-  else h+='<div class="empty-note"><span>NO RECORDS YET</span><strong>Start with the album<br>you know by heart.</strong></div>';
-  app.innerHTML=shell(h,ratingsOnly?"ratings":"discover");bindMenu();
-  if(!ratingsOnly){$("#nick").oninput=function(){store.nick=this.value.trim();save()};$("#q").oninput=function(){clearTimeout(timer);var v=this.value;timer=setTimeout(function(){search(v)},500)}}
-  app.querySelectorAll(".tile").forEach(function(b){b.onclick=function(){location.hash="#a="+b.dataset.id}});
+  app.innerHTML=shell(h,ratingsOnly?"ratings":"discover");bindMenu();setupReveals();
+  app.querySelectorAll(".tile").forEach(function(b){b.onclick=function(){albumReturnHash=ratingsOnly?"#ratings":"";location.hash="#a="+b.dataset.id}});
+  app.querySelectorAll("#rateAlbums,#emptyRate").forEach(function(b){b.onclick=function(){location.hash="#rate"}});
+  var all=$("#allRatings");if(all)all.onclick=function(){location.hash="#ratings"};
   if(!ratingsOnly)loadPopularAlbum().then(function(album){
     var box=$("#featured");if(!box)return;
-    if(!album){box.innerHTML='<div class="featured-placeholder"><span class="eyebrow">FEATURED ALBUM</span><h2>Pick a record worth replaying.</h2><p>Current chart picks could not load. Search the catalog to find an album to rate.</p><button class="btn ghost" id="featureSearch">Find an album</button></div>';var go=$("#featureSearch");if(go)go.onclick=function(){$("#q").focus()};return}
+    if(!album){box.innerHTML='<div class="featured-placeholder"><span class="eyebrow">FEATURED ALBUM</span><h2>Pick a record worth replaying.</h2><p>Current chart picks could not load. Open Rate albums to find something for your journal.</p><button class="btn ghost" id="featureSearch">Find an album</button></div>';var go=$("#featureSearch");if(go)go.onclick=function(){location.hash="#rate"};return}
     box.innerHTML=popularCard(album);
-    box.querySelectorAll("[data-feature-id]").forEach(function(b){b.onclick=function(){location.hash="#a="+b.dataset.featureId}});
+    box.querySelectorAll("[data-feature-id]").forEach(function(b){b.onclick=function(){albumReturnHash="";location.hash="#a="+b.dataset.featureId}});
   });
+}
+function ratePage(){
+  cur=null;albumReturnHash="#rate";
+  var h='<section class="rate-page"><button class="btn ghost back-home" id="rateBack">← Discover</button><div class="eyebrow">START A NEW ENTRY</div><h1>Rate an <em>album.</em></h1><p class="section-lede">Search for an album or EP, then rate it track by track.</p><div class="nick"><label for="nick">Name on shared ratings</label><input id="nick" maxlength="24" placeholder="Listener" value="'+esc(store.nick)+'"></div><div class="search-block"><label for="q">Find an album</label><input id="q" type="search" placeholder="Search albums or artists — try Yeat" autocomplete="off"><div id="res"></div></div></section>';
+  app.innerHTML=shell(h,"");bindMenu();
+  $("#rateBack").onclick=function(){location.hash=""};
+  $("#nick").oninput=function(){store.nick=this.value.trim();save()};
+  $("#q").oninput=function(){clearTimeout(timer);var v=this.value;timer=setTimeout(function(){search(v)},500)};
 }
 
 var popularAlbumPromise=null;
@@ -534,7 +599,7 @@ async function openAlbum(id){
   if(store.mine[id])return page(store.mine[id]);
   app.innerHTML=shell('<div class="msg">Loading album…</div>',"");bindMenu();
   try{var a=await loadAlbum(id);if(location.hash!=="#a="+id)return;page(a)}
-  catch(e){if(location.hash!=="#a="+id)return;app.innerHTML=shell('<button class="btn ghost" onclick="location.hash=\'\'">← Back</button><div class="msg">Could not load this album. Try again.</div>',"");bindMenu()}
+  catch(e){if(location.hash!=="#a="+id)return;app.innerHTML=shell('<button class="btn ghost" id="albumRetryBack">← Back</button><div class="msg">Could not load this album. Try again.</div>',"");bindMenu();$("#albumRetryBack").onclick=function(){location.hash=albumReturnHash||""}}
 }
 function roles(a){
   var v=a.tracks.filter(function(t){return t.r!=null}).map(function(t){return t.r});
@@ -560,11 +625,11 @@ function page(a,ro,by){
   h+='<div class="tracks">'+a.tracks.map(function(t,i){return trk(a,i,R)}).join("")+'</div>';
   h+='<div class="row">'+(ro?'<button class="btn" id="mine">Rate this album too</button>':(store.mine[a.id]?'<button class="btn ghost" id="del">Delete</button>':'')+'<button class="btn ghost" id="vsa">Album vs album</button><button class="btn" id="share">Share link</button>')+'</div>';
   app.innerHTML=shell(h,"");bindMenu();
-  $("#bk").onclick=function(){location.hash=""};
+  $("#bk").onclick=function(){location.hash=albumReturnHash||""};
   if(ro){$("#mine").onclick=function(){if(!store.mine[a.id]){store.mine[a.id]={id:a.id,title:a.title,artist:a.artist,year:a.year,cover:a.cover,tracks:a.tracks.map(function(t){return{name:t.name,r:null}})};save()}location.hash="#a="+a.id}}
   else{
     $("#share").onclick=function(){if(avg(a)==null){toast("Rate at least one track first");return}shareLink(a)};
-    var dl=$("#del");if(dl)dl.onclick=function(){if(confirm("Remove this album from your list?")){delete store.mine[a.id];delete alb[a.id];save();location.hash=""}};
+    var dl=$("#del");if(dl)dl.onclick=function(){if(confirm("Remove this album from your list?")){delete store.mine[a.id];delete alb[a.id];save();location.hash=albumReturnHash||""}};
     $("#vsa").onclick=function(){location.hash="#v="+a.id+","};
     app.querySelectorAll(".tr").forEach(function(b){b.onclick=function(){rate(a,+b.dataset.i,function(){page(a)})}})}
 }
@@ -630,6 +695,7 @@ function route(){
     if(h.indexOf("#s=")===0)shared(dec(h.slice(3)));
     else if(h.indexOf("#a=")===0)openAlbum(h.slice(3));
     else if(h.indexOf("#v=")===0)versus(h.slice(3));
+    else if(h==="#rate")ratePage();
     else if(h==="#ratings")home(true);
     else home();
   }catch(e){home()}
