@@ -30,7 +30,9 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 
 ## Design direction
 
-The current direction is a restrained, editorial music app: dark ink backgrounds, warm cream text, bold condensed headings, simple dividers, and a small set of mint, coral, and warm yellow accents. The user asked to avoid the purple gradients, heavy glow, and generic dark AI/SaaS look. Keep UI text in English.
+The refreshed direction follows the user's marked-up reference: a clean horizontal menu for Discover, My ratings, Album vs album, and a Sign in placeholder. The home page pairs album search with a featured popular recent album card. Use a flat midnight-blue palette in dark mode and a pale neutral palette in light mode. Keep both themes, with no background dots, gradients, or glow. UI text stays in English.
+
+The featured pick comes from Deezer's current album chart, choosing the newest release among charted albums from roughly the last two years (or the newest chart entry when none meet that window). It shows the user's saved rating when one exists; otherwise it clearly says “Not rated yet” and offers to rate the album. Do not invent a score. Sign in is a placeholder for now; real accounts are a later feature.
 
 ## How it is built
 
@@ -44,6 +46,7 @@ The current direction is a restrained, editorial music app: dark ink backgrounds
 - **Popularity-ranked search:** resolve exact artist matches, collect Deezer artist albums and top tracks, rank releases using track popularity and album rank, and deduplicate results.
 - **Album-only search:** filter singles while keeping EPs.
 - **Track notes:** add an optional, per-track note stored privately with local ratings.
+- **New home design:** replace the left sidebar and record illustration with horizontal navigation, a prominent search field, a chart-picked album card, and flat dark/light themes without decorative glow or gradients.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
 Relevant commits:
@@ -56,9 +59,11 @@ Relevant commits:
 
 ## Next session
 
-1. Check the newest **Actions → Pages build and deployment** run on `main`. The previous screenshot showed an earlier failed run; the JavaScript parse error was then fixed in `bff70da`. The Pages status and live page have not yet been verified after that repair.
-2. Open the live site and confirm it loads instead of showing a blank page or a lone newline.
+1. Check the newest **Actions → Pages build and deployment** run on `main`, then open the live site and confirm it loads.
+2. Review the new desktop and mobile navigation, flat dark/light themes, featured chart album, and Sign in placeholder.
 3. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
-4. Rate a track, add a note, close/reopen its rating dialog, and confirm the note persists.
+4. Rate a track, add a note, close/reopen its rating dialog, and confirm the note persists. Check that the featured album shows a score only if it has a saved rating.
 
 Start by reading this README and `index.html`, then continue from the checklist above.
+
+
