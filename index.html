@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rate albume</title>
-<script>try{var __t=localStorage.getItem("theme")}catch(e){}document.documentElement.dataset.theme=__t==="light"?"light":"dark"</script>
+<script>try{var __t=localStorage.getItem("theme")}catch(e){}document.documentElement.dataset.theme=__t==="dark"?"dark":"light"</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -99,58 +99,7 @@ input[type=range]{padding:0;margin:14px 0;border:0;background:transparent;accent
 .theme span{width:42px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--mute);transition:background .2s,color .2s}
 :root[data-theme="dark"] .theme [data-t="dark"],:root[data-theme="light"] .theme [data-t="light"]{background:var(--acc);color:#fff}
 </style>
-<style>
-:root{--bg:#f5f3ee;--card:#fffefa;--line:#e7e3da;--text:#24231f;--mute:#77736b;--acc:#d6533d;--amb:0;color-scheme:light}
-:root[data-theme="dark"]{--bg:#171816;--card:#20211e;--line:#343530;--text:#f2f0e9;--mute:#a4a197;--acc:#f07861;--amb:0;color-scheme:dark}
-body{font-family:"DM Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg)}
-.amb{display:none}
-.wrap{max-width:820px;padding:28px 24px 110px}
-.logo{color:var(--acc)}
-h1{font-family:"Playfair Display",Georgia,serif;letter-spacing:-1.8px;color:var(--text);background:none}
-.hero p{line-height:1.6}
-h3{letter-spacing:1.4px}
-input{background:var(--card);border-color:var(--line);border-radius:12px}
-input:focus{outline:2px solid color-mix(in srgb,var(--acc) 35%,transparent);border-color:var(--acc)}
-.btn{background:var(--acc);border-radius:10px}
-.btn.ghost{background:transparent;border-color:var(--line)}
-.nick input{border-radius:9px}
-.tile{background:transparent;border:0;border-radius:12px;padding:0}
-.tile:hover{transform:translateY(-2px);box-shadow:none}
-.bd{color:#fff;box-shadow:none;background:#24231fe8!important;border-radius:7px}
-.cover{border-radius:10px;box-shadow:none}
-.res{background:var(--card);border-color:var(--line);border-radius:12px;transition:border-color .12s}
-.res:hover{transform:none;border-color:var(--acc)}
-.head{background:var(--card);border-color:var(--line);border-radius:18px;backdrop-filter:none}
-.head .cover{border-radius:10px;box-shadow:none}
-.head h2,.vh h2{font-family:"Playfair Display",Georgia,serif}
-.head .by{color:var(--acc)}
-.ring svg{filter:none!important}
-.tracks{gap:0}
-.tr{background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;backdrop-filter:none;padding:11px 7px;transition:background .12s}
-.tr::before{width:3px;border-radius:3px;opacity:1}
-.tr:hover{transform:none;box-shadow:none;background:color-mix(in srgb,var(--text) 4%,transparent)}
-.tr:active{transform:scale(.99)}
-.tr .n{background:transparent}
-.tr.rated{--c:var(--acc)}
-.tr.best{--c:#33845f}.tr.worst{--c:#c64b43}
-.tr.rated .pill{color:var(--text);border-color:var(--line);background:var(--card)}
-.tr.best .pill,.tr.worst .pill{color:var(--c);border-color:color-mix(in srgb,var(--c) 32%,var(--line));background:color-mix(in srgb,var(--c) 8%,var(--card))}
-.wrap.wide{max-width:1080px}
-.vs{gap:16px}
-.vh{background:var(--card);border-color:var(--line);border-radius:18px;backdrop-filter:none}
-.vh .cover{border-radius:10px}
-.vh.win{box-shadow:inset 0 0 0 1px #33845f}
-.crown{background:#33845f;color:white;border-radius:6px}
-.vs .tracks{gap:0}
-.dialog{}
-dialog{--c:var(--acc);background:var(--card);border-color:var(--line);border-radius:18px}
-.big{text-shadow:none;color:var(--acc)}
-.quick button{border-color:var(--line)!important}
-.theme{border-radius:10px;background:var(--card);border-color:var(--line);backdrop-filter:none;box-shadow:none}
-.theme span{border-radius:7px}
-:root[data-theme="dark"] .theme [data-t="dark"],:root[data-theme="light"] .theme [data-t="light"]{background:var(--acc)}
-@media(max-width:520px){.wrap{padding:20px 16px 100px}.head{gap:12px}.head .cover{width:84px}.head h2{font-size:21px}.ring{width:66px;height:66px}.ring b{font-size:18px}}
-</style>
+
 </head>
 <body>
 <button class="theme" id="theme" aria-label="Schimbă tema (noapte / zi)"><span data-t="dark">☾</span><span data-t="light">☀</span></button>
@@ -326,7 +275,7 @@ function page(a,ro,by){
   h+='<div class="head">'+cover(a)+'<div class="info"><h2>'+esc(a.title)+'</h2><div class="a">'+esc(a.artist)+(a.year?" · "+esc(a.year):"")+'</div>'+(by?'<div class="by">Rated by @'+esc(by)+'</div>':'<div class="cnt">'+n+" / "+a.tracks.length+' piese notate</div>')+'</div>'+ring(m)+'</div>';
   var R=roles(a);
   h+='<div class="tracks">'+a.tracks.map(function(t,i){return trk(a,i,R)}).join("")+'</div>';
-  h+='<div class="row">'+(ro?'<button class="btn" id="mine">Dă și tu note la acest album</button>':(store.mine[a.id]?'<button class="btn ghost" id="del">Șterge</button>':'')+'<button class="btn ghost" id="vsa">⚔ Album vs Album</button><button class="btn" id="share">Share link</button>')+'</div>';
+  h+='<div class="row">'+(ro?'<button class="btn" id="mine">Dă și tu note la acest album</button>':(store.mine[a.id]?'<button class="btn ghost" id="del">Șterge</button>':'')+'<button class="btn ghost" id="vsa">Album vs album</button><button class="btn" id="share">Share link</button>')+'</div>';
   app.innerHTML=h;
   $("#bk").onclick=function(){location.hash=""};
   if(ro){$("#mine").onclick=function(){if(!store.mine[a.id]){store.mine[a.id]={id:a.id,title:a.title,artist:a.artist,year:a.year,cover:a.cover,tracks:a.tracks.map(function(t){return{name:t.name,r:null}})};save()}location.hash="#a="+a.id}}
