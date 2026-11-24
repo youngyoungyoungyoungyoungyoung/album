@@ -118,7 +118,8 @@ input[type=range]{padding:0;margin:14px 0;border:0;background:transparent;accent
 #trackNote{display:block;min-height:76px;margin-top:6px;resize:vertical;border:1px solid var(--line);border-radius:0;background:var(--paper);color:var(--ink);font:13px/1.5 "DM Sans",system-ui,sans-serif}
 #trackNote::placeholder{color:var(--mute)}
 .note-indicator{flex:none;color:var(--accent);font-size:8px;font-weight:700;letter-spacing:.7px}
-</style>\n</head>
+</style>
+</head>
 <body>
 <button class="theme" id="theme" aria-label="Switch theme (dark / light)"><span data-t="dark">☾</span><span data-t="light">☀</span></button>
 <div class="wrap" id="app"></div>
@@ -279,7 +280,8 @@ async function dzArtistAlbums(words){
     if(!entry){
       entry=byId[id]={id:id,title:album.title||"",artist:artist.name||"",year:(album.release_date||"").slice(0,4),cover:album.cover_medium||album.cover_big||album.cover||"",source:"dz-artist",recordType:album.record_type||"",rank:+album.rank||0,popularityRank:+album.rank||0,trackRanks:[],artistFans:+artist.nb_fan||0,artistExact:true};
     }else{
-      entry.rank=Math.max(entry.rank||0,+album.rank||0);\n      if(album.record_type)entry.recordType=album.record_type;
+      entry.rank=Math.max(entry.rank||0,+album.rank||0);
+      if(album.record_type)entry.recordType=album.record_type;
       entry.popularityRank=Math.max(entry.popularityRank||0,+album.rank||0);
       if(!entry.cover)entry.cover=album.cover_medium||album.cover_big||album.cover||"";
       if(!entry.year&&album.release_date)entry.year=album.release_date.slice(0,4);
