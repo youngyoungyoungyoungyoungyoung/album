@@ -30,7 +30,7 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 
 ## Design direction
 
-The refreshed direction follows the user's marked-up reference: a clean horizontal menu for Discover, My ratings, Album vs album, and a Sign in placeholder. The home page pairs album search with a featured popular recent album card. Use a flat midnight-blue palette in dark mode and a pale neutral palette in light mode. Keep both themes, with no background dots, gradients, or glow. UI text stays in English.
+The refreshed direction follows the user's marked-up reference: a clean horizontal menu for Discover, My ratings, Album vs album, and a Sign in placeholder. The home page opens on the headline and featured popular recent album card. Scrolling reveals a short journal introduction with a Rate albums button and a Recently rated section that previews private track notes. Album search and the shared-rating name field live on the Rate page. Album, track, and average stats live on My ratings. Use a flat midnight-blue palette in dark mode and a pale neutral palette in light mode. Keep both themes, with no background dots, gradients, or glow. UI text stays in English.
 
 The featured pick comes from Deezer's current album chart. It checks details for the twelve highest-ranked chart albums, then picks the newest release from roughly the last two years when available; otherwise it uses the highest-ranked chart album. It shows the user's saved rating when one exists; otherwise it clearly says “Not rated yet” and offers to rate the album. Do not invent a score. Sign in is a placeholder for now; real accounts are a later feature.
 
@@ -49,6 +49,7 @@ The featured-card parser accepts the chart response as either a direct `data` li
 - **Album-only search:** filter singles while keeping EPs.
 - **Track notes:** add an optional, per-track note stored privately with local ratings.
 - **New home design:** replace the left sidebar and record illustration with horizontal navigation, a prominent search field, a chart-picked album card, and flat dark/light themes without decorative glow or gradients.
+- **Journal home flow:** keep the opening view focused on the hero and featured album, reveal the journal intro and recent ratings as the visitor scrolls, show track note previews, move album search and shared-rating name entry to Rate, and move rating stats to My ratings.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
 Relevant commits:
@@ -62,10 +63,10 @@ Relevant commits:
 ## Next session
 
 1. Check the newest **Actions → Pages build and deployment** run on `main`, then open the live site and confirm it loads.
-2. Review the new desktop and mobile navigation, flat dark/light themes, and Sign in placeholder.
-3. Confirm the featured chart card loads a current album and handles a missing chart response with its search fallback.
+2. Review the desktop and mobile home hero, scroll reveal, Rate page, My ratings stats, and flat dark/light themes.
+3. Confirm the featured chart card loads a current album and handles a missing chart response with its Rate page fallback.
 4. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
-5. Rate a track, add a note, close/reopen its rating dialog, and confirm the note persists. Check that the featured album shows a score only if it has a saved rating.
+5. Rate a track, add a note, and confirm the note appears on recent album cards and remains private in shared links.
 
 Start by reading this README and `index.html`, then continue from the checklist above.
 
