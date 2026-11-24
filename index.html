@@ -244,15 +244,106 @@ dialog::backdrop{background:rgba(2,7,14,.72);backdrop-filter:none}.big{text-shad
 @media(max-width:500px){.hero{min-height:calc(100svh - 130px)}.journal-intro h2{font-size:39px}.section-heading{align-items:start;flex-direction:column;gap:6px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 13px}.tile-note{font-size:10px}.ratings-page .stats{grid-template-columns:repeat(3,minmax(0,1fr))}.ratings-page .stat{flex-direction:column;align-items:flex-start;justify-content:center;gap:3px}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 </style>
+<style>
+:root{--bg:#080d09;--panel:#111912;--paper:#151f17;--line:#2b3b2e;--ink:#f0f5ef;--soft:#a4b3a5;--accent:#83c98c;--mint:#a5d9a5;--coral:#d9a18a;--pink:#d7a5b4;color-scheme:dark}
+:root[data-theme="light"]{--bg:#f2f6f2;--panel:#ffffff;--paper:#fbfdfb;--line:#d8e2d9;--ink:#1c2a1f;--soft:#617366;--accent:#3b7b48;--mint:#a7d7aa;--coral:#bb7965;--pink:#a7647a;color-scheme:light}
+.topbar{border-bottom:0}
+.nav{gap:10px}
+.nav button{border:0;border-radius:999px;background:transparent;padding:10px 14px;color:var(--soft);font-weight:600}
+.nav button:hover,.nav button.active{border-color:transparent;background:color-mix(in srgb,var(--mint) 13%,var(--bg));color:var(--mint)}
+.sign-in{border:1px solid color-mix(in srgb,var(--mint) 36%,var(--line));border-radius:999px;background:var(--panel);padding:9px 16px;color:var(--ink);font-weight:600}
+.sign-in:hover{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 10%,var(--panel))}
+.theme{width:40px;height:40px;display:grid;place-items:center;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--mint)}
+.theme:hover{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 10%,var(--panel))}
+.theme-icon{display:flex;width:100%;height:100%;align-items:center;justify-content:center;font-size:18px;line-height:1}
+.btn{color:#0b130c}
+.btn.ghost:hover{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 10%,var(--panel))}
+dialog{width:min(92vw,520px)}
+#trackNote{display:block;width:100%;min-height:116px;box-sizing:border-box;margin-top:7px;padding:12px 14px;resize:vertical}
+@media(max-width:700px){.topbar{border-bottom:0}.nav{gap:2px}.nav button.active{background:transparent;color:var(--mint)}.sign-in{padding:8px 13px}.theme{top:15px}}
+</style>
+<style>
+/* Refined green music journal controls and rating surface. */
+dialog{border-radius:18px;padding:25px;background:var(--panel)}
+.rating-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.rating-dialog-head .eyebrow{color:var(--mint);font-size:9px;letter-spacing:1.1px}
+.rating-dialog-head h2{margin:5px 0 0;font:600 20px/1.2 "DM Sans",system-ui,sans-serif;letter-spacing:-.025em}
+.icon-close{display:grid;width:34px;height:34px;place-items:center;flex:none;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--soft);font-size:22px;line-height:1}
+.icon-close:hover{border-color:var(--mint);color:var(--ink)}
+.rating-score{display:flex;align-items:center;flex-direction:column;padding:17px 0 10px}
+.rating-score .big{font:600 56px/1 "DM Sans",system-ui,sans-serif;letter-spacing:-.06em}
+.rating-score>span{margin-top:4px;color:var(--soft);font-size:9px;font-weight:700;letter-spacing:1.1px}
+.rating-score #bl{min-height:20px;margin-top:4px;color:var(--soft);font-size:12px}
+.score-label{display:block;margin:3px 0 7px;color:var(--soft);font-size:11px;font-weight:600}
+.score-field{display:flex;align-items:center;gap:10px}
+.score-field input{width:124px;height:52px;border-radius:11px;background:var(--paper);padding:6px 12px;text-align:center;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.score-field span{color:var(--soft);font-size:12px}
+.rating-range{width:100%;margin:17px 0 20px;padding:0;accent-color:var(--mint)}
+.rating-actions{align-items:center;justify-content:flex-end;margin-top:18px}
+.rating-actions #cl{margin-right:auto}
+.head{margin:46px 0 26px;padding:20px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+.head .cover{width:164px;border-radius:12px}
+.head h2{font-size:clamp(27px,4vw,38px)}
+.ring{width:78px;height:78px}
+.tracks{gap:8px 12px;margin-top:0}
+.tr{min-height:54px;border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:11px 12px}
+.tr:hover{border-color:color-mix(in srgb,var(--mint) 50%,var(--line));background:color-mix(in srgb,var(--mint) 7%,var(--panel))}
+.tr.best .pill,.tr.rated .pill,.tr.worst .pill{border-radius:999px;background:color-mix(in srgb,var(--mint) 8%,var(--panel));color:var(--mint)}
+.tr.best .tag,.tr.rated .tag,.tr.worst .tag{color:var(--mint)}
+.note-indicator{border:1px solid color-mix(in srgb,var(--mint) 38%,var(--line));border-radius:999px;padding:3px 6px;color:var(--mint)}
+.rate-page .nick{padding:15px 17px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.rate-page .nick input{border-radius:8px}
+.rate-page #q{border-radius:12px}
+.rate-page .res{border-radius:10px}
+.row .btn{border-radius:999px;padding:10px 16px}
+.featured-track-list{margin:0;padding:2px 0 10px;border-top:1px solid var(--line)}
+.featured-track-heading{padding:10px 0 4px;color:var(--soft);font-size:9px;font-weight:700;letter-spacing:1px}
+.featured-track{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid color-mix(in srgb,var(--line) 68%,transparent)}
+.featured-track-number{color:var(--soft);font-size:9px;font-variant-numeric:tabular-nums}
+.featured-track-name{overflow:hidden;color:var(--ink);font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.featured-track strong{color:var(--mint);font-size:12px;font-variant-numeric:tabular-nums}
+.featured-track-more{padding-top:8px;color:var(--soft);font-size:10px}
+.featured-card{padding:23px;border-radius:18px}
+.featured-top{align-items:center}
+.featured-album{padding:18px 0}
+.featured-album .cover{border-radius:12px}
+.featured-bottom{padding-top:17px}
+.stats{gap:10px;margin:20px 0 30px;border:0}
+.stat,.stat:nth-child(2),.stat:nth-child(3){min-height:88px;border:1px solid var(--line);border-radius:13px;background:var(--panel)!important;color:var(--ink);padding:15px}
+.stat span{color:var(--soft)}
+.stat strong{color:var(--mint)}
+.empty-note{min-height:115px;border:1px solid var(--line);border-radius:15px;background:var(--panel);color:var(--ink)}
+.empty-note strong{color:var(--mint)}
+.rate-page{max-width:780px;margin:46px auto 70px;padding:30px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+.rate-page .back-home{margin-bottom:34px}
+.rate-page .nick{margin:28px 0 24px}
+.rate-page .search-block{margin-top:0}
+.rate-page #q{background:var(--bg)}
+.rate-page .res{border-bottom:1px solid var(--line);background:transparent}
+.rate-page .res:hover{background:color-mix(in srgb,var(--mint) 7%,var(--panel))}
+.hero-copy h1 em{color:var(--mint)}
+.journal-intro h2 em{color:var(--mint)}
+.bd{border-color:var(--line);background:var(--panel)!important;color:var(--mint)!important}
+@media(max-width:700px){
+  .head{margin:30px 0 20px;padding:15px;border-radius:14px}
+  .head .cover{width:102px}
+  .ring{width:60px;height:60px}
+  .tr{padding:10px 9px}
+  .rating-dialog-head h2{font-size:18px}
+  dialog{padding:19px}
+  .rate-page{margin:30px auto 50px;padding:20px}
+  .stat,.stat:nth-child(2),.stat:nth-child(3){min-height:72px;padding:10px 8px}
+}
+</style>
 </head>
 <body>
-<button class="theme" id="theme" aria-label="Switch theme (dark / light)"><span data-t="dark">☾</span><span data-t="light">☀</span></button>
+<button class="theme" id="theme" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">☼</span></button>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
 
 <script>
 var MB="https://musicbrainz.org/ws/2/",DZ="https://api.deezer.com/";
-var COL=["#8f4138","#a94a3d","#bf5343","#cc684a","#c17b46","#a88356","#71836a","#5f806b","#4c795f","#3f765b","#347551"];
+var COL=["#65735f","#697d5e","#6e895c","#73965b","#79a35a","#7faf5b","#84bb62","#80c875","#75d486","#68df94","#5aeba0"];
 var LAB=["Awful","Terrible","Bad","Below average","Okay","Average","Good","Very good","Great","Excellent","Masterpiece"];
 var $=function(s){return document.querySelector(s)};
 var app=$("#app"),store={nick:"",mine:{}},cur=null,found={};
@@ -380,7 +471,7 @@ function home(ratingsOnly){
   app.querySelectorAll(".tile").forEach(function(b){b.onclick=function(){albumReturnHash=ratingsOnly?"#ratings":"";location.hash="#a="+b.dataset.id}});
   app.querySelectorAll("#rateAlbums,#emptyRate").forEach(function(b){b.onclick=function(){location.hash="#rate"}});
   var all=$("#allRatings");if(all)all.onclick=function(){location.hash="#ratings"};
-  if(!ratingsOnly)loadPopularAlbum().then(function(album){
+  if(!ratingsOnly)loadFeaturedAlbum().then(function(album){
     var box=$("#featured");if(!box)return;
     if(!album){box.innerHTML='<div class="featured-placeholder"><span class="eyebrow">FEATURED ALBUM</span><h2>Pick a record worth replaying.</h2><p>Current chart picks could not load. Open Rate albums to find something for your journal.</p><button class="btn ghost" id="featureSearch">Find an album</button></div>';var go=$("#featureSearch");if(go)go.onclick=function(){location.hash="#rate"};return}
     box.innerHTML=popularCard(album);
@@ -430,13 +521,46 @@ function loadPopularAlbum(){
   }).catch(function(){popularAlbumPromise=null;return null});
   return popularAlbumPromise;
 }
+/* Owner-controlled featured selection. Update this record to change the homepage pick. */
+var OWNER_FEATURED_PICK=null;
+function loadFeaturedAlbum(){
+  if(!OWNER_FEATURED_PICK)return loadPopularAlbum();
+  var pick=OWNER_FEATURED_PICK;
+  var match=pick.id?Promise.resolve({id:pick.id}):dzFind(pick.title,pick.artist);
+  return match.then(function(hit){
+    if(!hit||!hit.id)throw new Error("Could not find the selected album");
+    return jsonp(DZ+"album/"+hit.id).then(function(detail){
+      if(!detail||detail.error)throw new Error("Could not load the selected album");
+      return{
+        id:String(hit.id),
+        title:pick.title||detail.title,
+        artist:{name:pick.artist||(detail.artist&&detail.artist.name)||""},
+        release_date:pick.release_date||detail.release_date||"",
+        cover_medium:detail.cover_medium||detail.cover_big||"",
+        cover_big:detail.cover_big||detail.cover_medium||"",
+        editorRating:pick.rating,
+        editorTracks:(pick.tracks||[]).map(function(t){return{name:t.name,score:+t.score}}),
+        curatorPick:true
+      };
+    });
+  }).catch(function(){return null});
+}
+function featuredTrackList(album,saved){
+  var tracks=(album.editorTracks&&album.editorTracks.length?album.editorTracks:(saved?saved.tracks.filter(function(t){return t.r!=null}).map(function(t){return{name:t.name,score:t.r}}):[]));
+  if(!tracks.length)return"";
+  return'<div class="featured-track-list"><div class="featured-track-heading">TRACK RATINGS</div>'+tracks.slice(0,6).map(function(t,i){
+    var score=t.score==null?t.r:t.score;
+    return'<div class="featured-track"><span class="featured-track-number">'+String(i+1).padStart(2,"0")+'</span><span class="featured-track-name">'+esc(t.name)+'</span><strong>'+((score==null||!Number.isFinite(+score))?"—":(+score).toFixed(1))+'</strong></div>';
+  }).join("")+(tracks.length>6?'<div class="featured-track-more">+'+(tracks.length-6)+' more tracks</div>':"")+'</div>';
+}
 function popularCard(album){
-  var saved=matchingRatedAlbum(album),score=saved?avg(saved):null;
+  var saved=matchingRatedAlbum(album),ownerScore=album.editorRating==null?null:+album.editorRating,score=ownerScore!=null?ownerScore:(saved?avg(saved):null),curated=!!album.curatorPick;
   var id=saved?saved.id:String(album.id),artist=(album.artist&&album.artist.name)||"",year=(album.release_date||"").slice(0,4);
   var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-24);
-  var releaseLabel=album.release_date&&new Date(album.release_date)>=cutoff?"RECENT RELEASE":"POPULAR RELEASE";
+  var releaseLabel=curated?"CURATOR'S PICK":(album.release_date&&new Date(album.release_date)>=cutoff?"RECENT RELEASE":"POPULAR RELEASE");
   var item={id:id,title:album.title,artist:artist,cover:(saved&&saved.cover)||album.cover_medium||album.cover_big||""};
-  return '<div class="featured-card"><div class="featured-top"><div><span class="eyebrow">POPULAR &amp; RECENT</span><small>From the current album chart</small></div><span class="chart-rank">Chart pick</span></div><button class="featured-album" data-feature-id="'+esc(id)+'">'+cover(item)+'<div class="featured-copy"><span class="release-label">'+releaseLabel+(year?' · '+esc(year):'')+'</span><h2>'+esc(album.title)+'</h2><p>'+esc(artist)+'</p></div></button><div class="featured-bottom"><div class="featured-score"><span>YOUR RATING</span><strong>'+(score==null?'—':score.toFixed(1))+'</strong><small>'+(score==null?'Not rated yet':'out of 10')+'</small></div><button class="btn" data-feature-id="'+esc(id)+'">'+(score==null?'Rate this album':'Open rating')+'</button></div></div>';
+  var trackList=featuredTrackList(album,saved);
+  return '<div class="featured-card"><div class="featured-top"><div><span class="eyebrow">'+(curated?"CURATOR’S PICK":"POPULAR &amp; RECENT")+'</span><small>'+(curated?"Chosen for the journal":"From the current album chart")+'</small></div><span class="chart-rank">'+(curated?"Personal pick":"Chart pick")+'</span></div><button class="featured-album" data-feature-id="'+esc(id)+'">'+cover(item)+'<div class="featured-copy"><span class="release-label">'+releaseLabel+(year?' · '+esc(year):'')+'</span><h2>'+esc(album.title)+'</h2><p>'+esc(artist)+'</p></div></button>'+trackList+'<div class="featured-bottom"><div class="featured-score"><span>'+(ownerScore!=null?"CURATOR SCORE":"YOUR RATING")+'</span><strong>'+(score==null?'—':score.toFixed(1))+'</strong><small>'+(score==null?'Not rated yet':'out of 10')+'</small></div><button class="btn" data-feature-id="'+esc(id)+'">'+(score==null?'Rate this album':'Open rating')+'</button></div></div>';
 }
 
 async function mbSearch(words){
@@ -635,15 +759,36 @@ function page(a,ro,by){
 }
 function rate(a,i,re){
   var t=a.tracks[i],d=$("#dlg"),last=i>=a.tracks.length-1;
-  d.innerHTML='<div style="font-weight:700;margin-bottom:2px">'+esc(t.name)+'</div><div style="color:var(--mute);font-size:12px">Track '+(i+1)+' of '+a.tracks.length+'</div><div class="big" id="bv"></div><div id="bl" style="text-align:center;color:var(--mute);font-size:13px"></div><input type="range" id="rg" min="0" max="10" step="0.1" value="'+(t.r==null?5:t.r)+'"><div class="quick">'+[1,2,3,4,5,6,7,8,9,10].map(function(n){return'<button data-v="'+n+'" style="color:'+COL[n]+';border-color:'+COL[n]+'88">'+n+'</button>'}).join("")+'</div><label class="note-label" for="trackNote">Track note <span>optional</span></label><textarea id="trackNote" maxlength="300" placeholder="A detail, a lyric, a memory…">'+esc(t.note||"")+'</textarea><div class="row"><button class="btn ghost" id="cl">Delete</button><button class="btn ghost" id="ok">Done</button>'+(last?'':'<button class="btn" id="nx">Next →</button>')+'</div>';
-  var rg=d.querySelector("#rg");
-  function upd(){var x=+rg.value,b=d.querySelector("#bv");b.textContent=x.toFixed(1);b.style.color=col(x);d.style.setProperty("--c",col(x));d.querySelector("#bl").textContent=LAB[Math.round(x)]}
-  rg.oninput=upd;upd();
-  d.querySelectorAll(".quick button").forEach(function(b){b.onclick=function(){rg.value=b.dataset.v;upd()}});
-  function done(val,next){var note=d.querySelector("#trackNote").value.trim();if(note)t.note=note;else delete t.note;t.r=val;a.u=Date.now();store.mine[a.id]=a;d.close();re();if(next)rate(a,i+1,re)}
-  d.querySelector("#ok").onclick=function(){done(+rg.value)};
+  d.innerHTML='<div class="rating-dialog-head"><div><div class="eyebrow">TRACK '+(i+1)+' OF '+a.tracks.length+'</div><h2>'+esc(t.name)+'</h2></div><button class="icon-close" id="closeRate" aria-label="Close rating">×</button></div><div class="rating-score"><div class="big" id="bv"></div><span>OUT OF 10</span><div id="bl"></div></div><label class="score-label" for="scoreInput">Your score</label><div class="score-field"><input id="scoreInput" type="number" min="0" max="10" step="0.1" inputmode="decimal" value="'+(t.r==null?"5.0":t.r.toFixed(1))+'"><span>/ 10</span></div><input class="rating-range" type="range" id="rg" min="0" max="10" step="0.1" value="'+(t.r==null?5:t.r)+'" aria-label="Adjust score from 0 to 10"><label class="note-label" for="trackNote">Track note <span>optional</span></label><textarea id="trackNote" maxlength="300" placeholder="A detail, a lyric, a memory…">'+esc(t.note||"")+'</textarea><div class="row rating-actions"><button class="btn ghost" id="cl">Clear rating</button><button class="btn ghost" id="ok">Done</button>'+(last?'':'<button class="btn" id="nx">Next track →</button>')+'</div>';
+  var rg=d.querySelector("#rg"),scoreInput=d.querySelector("#scoreInput");
+  function paint(x){var b=d.querySelector("#bv");b.textContent=x.toFixed(1);b.style.color=col(x);d.style.setProperty("--c",col(x));d.querySelector("#bl").textContent=LAB[Math.round(x)]}
+  rg.oninput=function(){scoreInput.value=(+rg.value).toFixed(1);paint(+rg.value)};
+  scoreInput.oninput=function(){
+    if(scoreInput.value===""){d.querySelector("#bv").textContent="—";d.querySelector("#bl").textContent="Enter a score";return}
+    var x=Number(scoreInput.value);if(!Number.isFinite(x))return;
+    if(x<0){x=0;scoreInput.value="0"}else if(x>10){x=10;scoreInput.value="10"}
+    rg.value=x;paint(x);
+  };
+  scoreInput.onblur=function(){
+    if(scoreInput.value===""){scoreInput.value=(+rg.value).toFixed(1);paint(+rg.value);return}
+    var x=Math.round(Math.max(0,Math.min(10,Number(scoreInput.value)))*10)/10;
+    scoreInput.value=x.toFixed(1);rg.value=x;paint(x);
+  };
+  paint(+(t.r==null?5:t.r));
+  function done(val,next){
+    if(val!==null){
+      if(scoreInput.value===""){toast("Enter a score from 0 to 10");scoreInput.focus();return}
+      var numeric=Number(scoreInput.value);
+      if(!Number.isFinite(numeric)){toast("Enter a score from 0 to 10");scoreInput.focus();return}
+      val=Math.round(Math.max(0,Math.min(10,numeric))*10)/10;
+    }
+    var note=d.querySelector("#trackNote").value.trim();if(note)t.note=note;else delete t.note;
+    t.r=val;a.u=Date.now();store.mine[a.id]=a;save();d.close();re();if(next)rate(a,i+1,re);
+  }
+  d.querySelector("#ok").onclick=function(){done(Number(scoreInput.value))};
   d.querySelector("#cl").onclick=function(){done(null)};
-  var nx=d.querySelector("#nx");if(nx)nx.onclick=function(){done(+rg.value,true)};
+  var nx=d.querySelector("#nx");if(nx)nx.onclick=function(){done(Number(scoreInput.value),true)};
+  var close=d.querySelector("#closeRate");if(close)close.onclick=function(){d.close()};
   d.showModal();
 }
 function shared(p){
@@ -700,10 +845,18 @@ function route(){
     else home();
   }catch(e){home()}
 }
+function syncThemeButton(){
+  var dark=document.documentElement.dataset.theme==="dark",button=$("#theme");
+  button.querySelector(".theme-icon").textContent=dark?"☼":"☾";
+  button.setAttribute("aria-label",dark?"Switch to light mode":"Switch to dark mode");
+}
+syncThemeButton();
 $("#theme").onclick=function(){
   var t=document.documentElement.dataset.theme==="dark"?"light":"dark";
   document.documentElement.dataset.theme=t;
-  try{localStorage.setItem("theme",t)}catch(e){}};
+  try{localStorage.setItem("theme",t)}catch(e){}
+  syncThemeButton();
+};
 addEventListener("hashchange",route);
 route();
 </script>
