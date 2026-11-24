@@ -34,6 +34,8 @@ The refreshed direction follows the user's marked-up reference: a clean horizont
 
 The featured pick comes from Deezer's current album chart, choosing the newest release among charted albums from roughly the last two years (or the newest chart entry when none meet that window). It shows the user's saved rating when one exists; otherwise it clearly says “Not rated yet” and offers to rate the album. Do not invent a score. Sign in is a placeholder for now; real accounts are a later feature.
 
+The current browser preview could not load Deezer's chart endpoint, so the featured area falls back to a search prompt. Check whether this is specific to the browser's content blocker before changing providers or adding a static album.
+
 ## How it is built
 
 - One vanilla HTML/CSS/JavaScript file; no build step or framework.
@@ -60,9 +62,10 @@ Relevant commits:
 ## Next session
 
 1. Check the newest **Actions → Pages build and deployment** run on `main`, then open the live site and confirm it loads.
-2. Review the new desktop and mobile navigation, flat dark/light themes, featured chart album, and Sign in placeholder.
-3. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
-4. Rate a track, add a note, close/reopen its rating dialog, and confirm the note persists. Check that the featured album shows a score only if it has a saved rating.
+2. Review the new desktop and mobile navigation, flat dark/light themes, and Sign in placeholder.
+3. Check the featured chart album in a regular browser. If Deezer remains blocked, keep the honest search fallback and decide on another source before displaying a pick.
+4. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
+5. Rate a track, add a note, close/reopen its rating dialog, and confirm the note persists. Check that the featured album shows a score only if it has a saved rating.
 
 Start by reading this README and `index.html`, then continue from the checklist above.
 
