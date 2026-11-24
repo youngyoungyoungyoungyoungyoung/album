@@ -30,7 +30,7 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 
 ## Design direction
 
-The current direction is a clean album journal with a black-and-green dark theme and a soft green-tinted light theme. Keep both themes, no background dots, gradients, or glow. The home page opens on the headline and featured album, then reveals the journal introduction and recently rated records while scrolling. Each recent album can show private track-note excerpts. Album search and the shared-rating name field live on the Rate page; album, track, and average stats live on My ratings. The header uses a compact pill-style navigation and a single aligned theme icon.
+The current direction is a clean album journal with a black-and-green dark theme and a soft green-tinted light theme. Keep both themes, no background dots, gradients, or glow. The home page opens on the headline and featured album, then reveals the centered journal introduction and recently rated records while scrolling. Keep the intro headline, description, and Rate albums button grouped and centered. Each recent album can show private track-note excerpts. Album search and the shared-rating name field live on the Rate page; album, track, and average stats live on My ratings. The header uses a compact pill-style navigation and a single aligned theme icon.
 
 The featured card supports an owner-maintained OWNER_FEATURED_PICK setting with the album, owner score, and per-track scores. It displays the pick as “Curator’s pick.” Update this setting and publish to change the public feature; the site is static, so a public on-page editor would not safely publish updates for everyone. Until an owner pick is configured, the featured card uses the existing chart selection. Never invent album or track scores. Sign in is a placeholder for now; real accounts are a later feature.
 
@@ -51,7 +51,8 @@ The featured-card parser accepts the chart response as either a direct `data` li
 - **New home design:** replace the left sidebar and record illustration with horizontal navigation, a chart-picked album card, and flat dark/light themes without decorative glow or gradients.
 - **Journal home flow:** keep the opening view focused on the hero and featured album, reveal the journal intro and recent ratings as the visitor scrolls, show track note previews, move album search and shared-rating name entry to Rate, and move rating stats to My ratings.
 - **Black-and-green UI:** recolor the dark theme, align the theme toggle, remove the topbar divider, and refine navigation, album detail, and rating dialog styling.
-- **Direct score entry:** allow decimal ratings from 0 to 10 in one-tenth steps alongside the slider, and make the optional track note field fill the rating dialog.
+- **Direct score entry:** make the large score at the top of the rating dialog itself editable from 0 to 10 in one-tenth steps, alongside the slider, with no separate score box; keep the optional track note field full-width.
+- **Centered journal intro:** center the section headline, description, and Rate albums button together on desktop and mobile.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
 Relevant commits:
