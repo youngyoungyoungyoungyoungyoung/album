@@ -342,7 +342,7 @@ function matchingRatedAlbum(album){
 function loadPopularAlbum(){
   if(popularAlbumPromise)return popularAlbumPromise;
   popularAlbumPromise=jsonp(DZ+"chart/0/albums?limit=50").then(function(d){
-    var albums=(d&&d.albums&&d.albums.data)||[];
+    var albums=(d&&d.data)||((d&&d.albums&&d.albums.data)||[]);
     albums=albums.filter(function(a){return a&&a.id&&isAlbumType(a.record_type||"album")});
     if(!albums.length)throw new Error("No current chart albums");
     var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-24);
