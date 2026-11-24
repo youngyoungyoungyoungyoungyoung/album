@@ -112,7 +112,13 @@ input[type=range]{padding:0;margin:14px 0;border:0;background:transparent;accent
 .empty-note span{font-size:9px;letter-spacing:1px;font-weight:700}.empty-note strong{font:600 23px/1.05 "Oswald","Arial Narrow",sans-serif;text-align:right;text-transform:uppercase}
 @media(max-width:500px){.stats{gap:5px}.stat{min-height:64px;padding:8px}.stat strong{font-size:24px}.stat span{font-size:7px}.empty-note{align-items:flex-start;flex-direction:column}.empty-note strong{text-align:left}}
 </style>
-</head>
+<style>
+.note-label{display:block;margin-top:17px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.note-label span{color:var(--mute);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px}
+#trackNote{display:block;min-height:76px;margin-top:6px;resize:vertical;border:1px solid var(--line);border-radius:0;background:var(--paper);color:var(--ink);font:13px/1.5 "DM Sans",system-ui,sans-serif}
+#trackNote::placeholder{color:var(--mute)}
+.note-indicator{flex:none;color:var(--accent);font-size:8px;font-weight:700;letter-spacing:.7px}
+</style>\n</head>
 <body>
 <button class="theme" id="theme" aria-label="Switch theme (dark / light)"><span data-t="dark">☾</span><span data-t="light">☀</span></button>
 <div class="wrap" id="app"></div>
@@ -234,12 +240,16 @@ async function mbSearch(words){
   var A=words.map(function(w){return w+"*"}).join(" AND "),seen={};
   var d=await j(MB+"release-group?fmt=json&limit=30&query="+encodeURIComponent("("+A+") OR releasegroup:("+A+") OR artist:("+A+")"));
   return(d["release-groups"]||[]).filter(function(x){
-    if(x["primary-type"]!=="Album"&&x["primary-type"]!=="EP")return false;
+    if(x["primary-type"]!=="Album")return false;
     var k=norm(x.title)+norm(artistOf(x));if(seen[k])return false;seen[k]=1;return true}).slice(0,18).map(function(x){
-    return{id:x.id,title:x.title,artist:artistOf(x),year:(x["first-release-date"]||"").slice(0,4),source:"mb",rank:0}})}
+    return{id:x.id,title:x.title,artist:artistOf(x),year:(x["first-release-date"]||"").slice(0,4),source:"mb",recordType:"album",rank:0}})}
+function isAlbumType(value){
+  var type=String(value||"").toLowerCase();
+  return type==="album"||type==="compilation"||type==="live";
+}
 async function dzSearch(words){
   var d=await jsonp(DZ+"search/album?limit=30&q="+encodeURIComponent(words.join(" ")));
-  return((d&&d.data)||[]).map(function(x){return{id:String(x.id),title:x.title,artist:(x.artist&&x.artist.name)||"",year:(x.release_date||"").slice(0,4),cover:x.cover_medium||x.cover_big||"",source:"dz",rank:+x.rank||0,popularityRank:+x.rank||0}});
+  return((d&&d.data)||[]).filter(function(x){return isAlbumType(x.record_type)}).map(function(x){return{id:String(x.id),title:x.title,artist:(x.artist&&x.artist.name)||"",year:(x.release_date||"").slice(0,4),cover:x.cover_medium||x.cover_big||"",source:"dz",recordType:x.record_type,rank:+x.rank||0,popularityRank:+x.rank||0}});
 }
 function artistMatchScore(name,words){
   var n=norm(name),q=norm(words.join(" "));
@@ -267,18 +277,19 @@ async function dzArtistAlbums(words){
     if(!album||!album.id)return null;
     var id=String(album.id),entry=byId[id];
     if(!entry){
-      entry=byId[id]={id:id,title:album.title||"",artist:artist.name||"",year:(album.release_date||"").slice(0,4),cover:album.cover_medium||album.cover_big||album.cover||"",source:"dz-artist",rank:+album.rank||0,popularityRank:+album.rank||0,trackRanks:[],artistFans:+artist.nb_fan||0,artistExact:true};
+      entry=byId[id]={id:id,title:album.title||"",artist:artist.name||"",year:(album.release_date||"").slice(0,4),cover:album.cover_medium||album.cover_big||album.cover||"",source:"dz-artist",recordType:album.record_type||"",rank:+album.rank||0,popularityRank:+album.rank||0,trackRanks:[],artistFans:+artist.nb_fan||0,artistExact:true};
     }else{
-      entry.rank=Math.max(entry.rank||0,+album.rank||0);
+      entry.rank=Math.max(entry.rank||0,+album.rank||0);\n      if(album.record_type)entry.recordType=album.record_type;
       entry.popularityRank=Math.max(entry.popularityRank||0,+album.rank||0);
       if(!entry.cover)entry.cover=album.cover_medium||album.cover_big||album.cover||"";
       if(!entry.year&&album.release_date)entry.year=album.release_date.slice(0,4);
     }
     return entry;
   }
-  if(details[0].status==="fulfilled")((details[0].value&&details[0].value.data)||[]).forEach(addAlbum);
+  if(details[0].status==="fulfilled")((details[0].value&&details[0].value.data)||[]).filter(function(album){return isAlbumType(album.record_type)}).forEach(addAlbum);
   if(details[1].status==="fulfilled")((details[1].value&&details[1].value.data)||[]).forEach(function(track){
-    var entry=addAlbum(track.album);
+    var album=track.album||{},entry=byId[String(album.id)]||null;
+    if(!entry&&isAlbumType(album.record_type))entry=addAlbum(album);
     if(entry){
       var rank=+track.rank||0;
       if(rank>0){entry.trackRanks.push(rank);entry.popularityRank=Math.max(entry.popularityRank||0,rank)}
@@ -397,7 +408,8 @@ function trk(a,i,R,sym){
     if(t.r===R.hi){cls=" best";tag=sym?"▲":"BEST"}
     else if(t.r===R.lo){cls=" worst";tag=sym?"▼":"WORST"}
     else cls=" rated"}
-  return'<button class="tr'+cls+'" data-i="'+i+'"'+(t.r==null?"":' style="--w:'+(t.r*10)+'%"')+'><span class="n">'+(i+1)+'</span><span class="nm">'+esc(t.name)+'</span>'+(tag?'<span class="tag">'+tag+'</span>':'')+'<span class="pill'+(t.r==null?" none":"")+'">'+(t.r==null?"–":t.r.toFixed(1))+'</span></button>'}
+  var noteMark=t.note?'<span class="note-indicator" title="'+esc(t.note)+'">NOTE</span>':"";
+  return'<button class="tr'+cls+'" data-i="'+i+'"'+(t.r==null?"":' style="--w:'+(t.r*10)+'%"')+'><span class="n">'+(i+1)+'</span><span class="nm">'+esc(t.name)+'</span>'+noteMark+(tag?'<span class="tag">'+tag+'</span>':'')+'<span class="pill'+(t.r==null?" none":"")+'">'+(t.r==null?"–":t.r.toFixed(1))+'</span></button>'}
 function ring(m){
   var c=2*Math.PI*36,color=m==null?"#888":col(m);
   return'<div class="ring"><svg viewBox="0 0 84 84" style="filter:drop-shadow(0 0 8px '+color+'aa)"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="7"/><circle cx="42" cy="42" r="36" fill="none" stroke="'+color+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+(c*(m==null?0:m/10))+' '+c+'" transform="rotate(-90 42 42)"/></svg><b style="color:'+color+'">'+(m==null?"—":m.toFixed(1))+'<small>/10</small></b></div>'}
@@ -419,12 +431,12 @@ function page(a,ro,by){
 }
 function rate(a,i,re){
   var t=a.tracks[i],d=$("#dlg"),last=i>=a.tracks.length-1;
-  d.innerHTML='<div style="font-weight:700;margin-bottom:2px">'+esc(t.name)+'</div><div style="color:var(--mute);font-size:12px">Track '+(i+1)+' of '+a.tracks.length+'</div><div class="big" id="bv"></div><div id="bl" style="text-align:center;color:var(--mute);font-size:13px"></div><input type="range" id="rg" min="0" max="10" step="0.1" value="'+(t.r==null?5:t.r)+'"><div class="quick">'+[1,2,3,4,5,6,7,8,9,10].map(function(n){return'<button data-v="'+n+'" style="color:'+COL[n]+';border-color:'+COL[n]+'88">'+n+'</button>'}).join("")+'</div><div class="row"><button class="btn ghost" id="cl">Delete</button><button class="btn ghost" id="ok">Done</button>'+(last?'':'<button class="btn" id="nx">Next →</button>')+'</div>';
+  d.innerHTML='<div style="font-weight:700;margin-bottom:2px">'+esc(t.name)+'</div><div style="color:var(--mute);font-size:12px">Track '+(i+1)+' of '+a.tracks.length+'</div><div class="big" id="bv"></div><div id="bl" style="text-align:center;color:var(--mute);font-size:13px"></div><input type="range" id="rg" min="0" max="10" step="0.1" value="'+(t.r==null?5:t.r)+'"><div class="quick">'+[1,2,3,4,5,6,7,8,9,10].map(function(n){return'<button data-v="'+n+'" style="color:'+COL[n]+';border-color:'+COL[n]+'88">'+n+'</button>'}).join("")+'</div><label class="note-label" for="trackNote">Track note <span>optional</span></label><textarea id="trackNote" maxlength="300" placeholder="A detail, a lyric, a memory…">'+esc(t.note||"")+'</textarea><div class="row"><button class="btn ghost" id="cl">Delete</button><button class="btn ghost" id="ok">Done</button>'+(last?'':'<button class="btn" id="nx">Next →</button>')+'</div>';
   var rg=d.querySelector("#rg");
   function upd(){var x=+rg.value,b=d.querySelector("#bv");b.textContent=x.toFixed(1);b.style.color=col(x);d.style.setProperty("--c",col(x));d.querySelector("#bl").textContent=LAB[Math.round(x)]}
   rg.oninput=upd;upd();
   d.querySelectorAll(".quick button").forEach(function(b){b.onclick=function(){rg.value=b.dataset.v;upd()}});
-  function done(val,next){t.r=val;a.u=Date.now();store.mine[a.id]=a;save();d.close();re();if(next)rate(a,i+1,re)}
+  function done(val,next){var note=d.querySelector("#trackNote").value.trim();if(note)t.note=note;else delete t.note;t.r=val;a.u=Date.now();store.mine[a.id]=a;d.close();re();if(next)rate(a,i+1,re)}
   d.querySelector("#ok").onclick=function(){done(+rg.value)};
   d.querySelector("#cl").onclick=function(){done(null)};
   var nx=d.querySelector("#nx");if(nx)nx.onclick=function(){done(+rg.value,true)};
