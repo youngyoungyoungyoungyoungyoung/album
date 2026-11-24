@@ -206,12 +206,12 @@ dialog::backdrop{background:rgba(2,7,14,.72);backdrop-filter:none}.big{text-shad
 .hero{min-height:calc(100svh - 154px);margin:0;align-content:center}
 .hero-copy{padding:28px 0}
 .journal-intro,.recent-section,.ratings-page,.rate-page{max-width:940px;margin:0 auto}
-.journal-intro{display:grid;grid-template-columns:minmax(0,1fr) 170px;align-items:end;column-gap:48px;row-gap:16px;margin-top:20px;padding:78px 0 82px;border-top:1px solid var(--line)}
-.journal-intro .eyebrow{grid-column:1/-1}
+.journal-intro{display:grid;grid-template-columns:1fr;justify-items:center;row-gap:20px;margin-top:20px;padding:78px 0 82px;border-top:1px solid var(--line);text-align:center}
+.journal-intro .eyebrow{grid-column:auto}
 .journal-intro h2{margin:0;color:var(--ink);font:600 clamp(34px,5vw,58px)/1.04 "DM Sans",system-ui,sans-serif;letter-spacing:-.055em}
 .journal-intro h2 em{color:var(--accent);font-style:normal}
-.journal-intro p{max-width:490px;margin:4px 0 0;color:var(--soft);font-size:14px;line-height:1.8}
-.journal-intro .btn{justify-self:end;min-width:152px;padding:12px 17px}
+.journal-intro p{max-width:540px;margin:0;color:var(--soft);font-size:14px;line-height:1.8}
+.journal-intro .btn{justify-self:center;min-width:152px;margin-top:2px;padding:12px 17px}
 .recent-section{padding:50px 0 72px;border-top:1px solid var(--line)}
 .section-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}
 .section-heading h2,.section-title{margin:8px 0 0;color:var(--ink);font:600 25px/1.15 "DM Sans",system-ui,sans-serif;letter-spacing:-.035em}
@@ -240,7 +240,7 @@ dialog::backdrop{background:rgba(2,7,14,.72);backdrop-filter:none}.big{text-shad
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
 .reveal.is-visible{opacity:1;transform:translateY(0)}
 @media(max-width:900px){.hero{min-height:calc(100svh - 150px)}}
-@media(max-width:700px){.hero{min-height:calc(100svh - 126px);margin:0}.hero-copy{padding:20px 0 0}.journal-intro{grid-template-columns:1fr;gap:15px;margin-top:4px;padding:54px 0}.journal-intro .eyebrow{grid-column:auto}.journal-intro .btn{justify-self:start;margin-top:6px}.recent-section{padding:36px 0 52px}.ratings-page,.rate-page{padding:42px 0 58px}.ratings-page .stats{margin:26px 0 32px}}
+@media(max-width:700px){.hero{min-height:calc(100svh - 126px);margin:0}.hero-copy{padding:20px 0 0}.journal-intro{grid-template-columns:1fr;gap:15px;margin-top:4px;padding:54px 0;text-align:center;justify-items:center}.journal-intro .eyebrow{grid-column:auto}.journal-intro .btn{justify-self:center;margin-top:6px}.recent-section{padding:36px 0 52px}.ratings-page,.rate-page{padding:42px 0 58px}.ratings-page .stats{margin:26px 0 32px}}
 @media(max-width:500px){.hero{min-height:calc(100svh - 130px)}.journal-intro h2{font-size:39px}.section-heading{align-items:start;flex-direction:column;gap:6px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 13px}.tile-note{font-size:10px}.ratings-page .stats{grid-template-columns:repeat(3,minmax(0,1fr))}.ratings-page .stat{flex-direction:column;align-items:flex-start;justify-content:center;gap:3px}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 </style>
@@ -272,6 +272,9 @@ dialog{border-radius:18px;padding:25px;background:var(--panel)}
 .icon-close:hover{border-color:var(--mint);color:var(--ink)}
 .rating-score{display:flex;align-items:center;flex-direction:column;padding:17px 0 10px}
 .rating-score .big{font:600 56px/1 "DM Sans",system-ui,sans-serif;letter-spacing:-.06em}
+.rating-score .score-inline{display:block;width:100%;max-width:220px;height:70px;margin:0;padding:0;border:0;border-radius:0;outline:0;background:transparent;text-align:center;cursor:text;font-variant-numeric:tabular-nums;appearance:textfield}
+.rating-score .score-inline::-webkit-inner-spin-button,.rating-score .score-inline::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.rating-score .score-inline:focus-visible{outline:1px solid color-mix(in srgb,var(--mint) 42%,transparent);outline-offset:4px;border-radius:5px}
 .rating-score>span{margin-top:4px;color:var(--soft);font-size:9px;font-weight:700;letter-spacing:1.1px}
 .rating-score #bl{min-height:20px;margin-top:4px;color:var(--soft);font-size:12px}
 .score-label{display:block;margin:3px 0 7px;color:var(--soft);font-size:11px;font-weight:600}
@@ -461,7 +464,7 @@ function home(ratingsOnly){
   }else{
     h+='<section class="hero"><div class="hero-copy"><div class="eyebrow">A PERSONAL ALBUM RATING JOURNAL</div><h1>Albums, rated<br><em>your way.</em></h1><p>Find the records that stay with you. Rate every track, leave a private note, and build a collection that feels like yours.</p></div>';
     h+='<aside class="featured" id="featured" aria-live="polite"><div class="featured-placeholder"><span class="eyebrow">POPULAR &amp; RECENT</span><p>Finding a current album worth hearing…</p></div></aside></section>';
-    h+='<section class="journal-intro reveal"><div class="eyebrow">YOUR LISTENING, IN YOUR WORDS</div><h2>A score is only<br><em>part of the story.</em></h2><p>Rate an album track by track and add a note to the moments you want to remember. Keep every rating together in your own music journal.</p><button class="btn" id="rateAlbums">Rate albums</button></section>';
+  h+='<section class="journal-intro reveal"><div class="eyebrow">YOUR LISTENING, IN YOUR WORDS</div><h2>A score is only<br><em>part of the story.</em></h2><p>Rate an album track by track and add a note to the moments you want to remember. Keep every rating together in your own music journal.</p><button class="btn" id="rateAlbums">Rate albums</button></section>';
     h+='<section class="recent-section reveal"><div class="section-heading"><div><div class="eyebrow">FROM YOUR JOURNAL</div><h2>Recently rated</h2></div><button class="text-link" id="allRatings">View all ratings <span>→</span></button></div>';
     if(mine.length)h+='<div class="grid">'+mine.slice(0,6).map(albumTile).join("")+'</div>';
     else h+='<div class="empty-note"><span>NO RECORDS YET</span><strong>Your first album rating starts here.</strong><button class="btn" id="emptyRate">Rate an album</button></div>';
@@ -759,20 +762,21 @@ function page(a,ro,by){
 }
 function rate(a,i,re){
   var t=a.tracks[i],d=$("#dlg"),last=i>=a.tracks.length-1;
-  d.innerHTML='<div class="rating-dialog-head"><div><div class="eyebrow">TRACK '+(i+1)+' OF '+a.tracks.length+'</div><h2>'+esc(t.name)+'</h2></div><button class="icon-close" id="closeRate" aria-label="Close rating">×</button></div><div class="rating-score"><div class="big" id="bv"></div><span>OUT OF 10</span><div id="bl"></div></div><label class="score-label" for="scoreInput">Your score</label><div class="score-field"><input id="scoreInput" type="number" min="0" max="10" step="0.1" inputmode="decimal" value="'+(t.r==null?"5.0":t.r.toFixed(1))+'"><span>/ 10</span></div><input class="rating-range" type="range" id="rg" min="0" max="10" step="0.1" value="'+(t.r==null?5:t.r)+'" aria-label="Adjust score from 0 to 10"><label class="note-label" for="trackNote">Track note <span>optional</span></label><textarea id="trackNote" maxlength="300" placeholder="A detail, a lyric, a memory…">'+esc(t.note||"")+'</textarea><div class="row rating-actions"><button class="btn ghost" id="cl">Clear rating</button><button class="btn ghost" id="ok">Done</button>'+(last?'':'<button class="btn" id="nx">Next track →</button>')+'</div>';
+  d.innerHTML='<div class="rating-dialog-head"><div><div class="eyebrow">TRACK '+(i+1)+' OF '+a.tracks.length+'</div><h2>'+esc(t.name)+'</h2></div><button class="icon-close" id="closeRate" aria-label="Close rating">×</button></div><div class="rating-score"><input class="big score-inline" id="scoreInput" type="number" min="0" max="10" step="0.1" inputmode="decimal" value="'+(t.r==null?"5.0":t.r.toFixed(1))+'" aria-label="Your score from 0 to 10"><span>OUT OF 10</span><div id="bl"></div></div><input class="rating-range" type="range" id="rg" min="0" max="10" step="0.1" value="'+(t.r==null?5:t.r)+'" aria-label="Adjust score from 0 to 10"><label class="note-label" for="trackNote">Track note <span>optional</span></label><textarea id="trackNote" maxlength="300" placeholder="A detail, a lyric, a memory…">'+esc(t.note||"")+'</textarea><div class="row rating-actions"><button class="btn ghost" id="cl">Clear rating</button><button class="btn ghost" id="ok">Done</button>'+(last?'':'<button class="btn" id="nx">Next track →</button>')+'</div>';
   var rg=d.querySelector("#rg"),scoreInput=d.querySelector("#scoreInput");
-  function paint(x){var b=d.querySelector("#bv");b.textContent=x.toFixed(1);b.style.color=col(x);d.style.setProperty("--c",col(x));d.querySelector("#bl").textContent=LAB[Math.round(x)]}
-  rg.oninput=function(){scoreInput.value=(+rg.value).toFixed(1);paint(+rg.value)};
+  function paint(x,writeValue){if(writeValue!==false)scoreInput.value=x.toFixed(1);scoreInput.style.color=col(x);d.style.setProperty("--c",col(x));d.querySelector("#bl").textContent=LAB[Math.round(x)]}
+  scoreInput.onfocus=function(){scoreInput.select()};
+  rg.oninput=function(){scoreInput.value=(+rg.value).toFixed(1);paint(+rg.value,false)};
   scoreInput.oninput=function(){
-    if(scoreInput.value===""){d.querySelector("#bv").textContent="—";d.querySelector("#bl").textContent="Enter a score";return}
+    if(scoreInput.value===""){d.querySelector("#bl").textContent="Enter a score";return}
     var x=Number(scoreInput.value);if(!Number.isFinite(x))return;
     if(x<0){x=0;scoreInput.value="0"}else if(x>10){x=10;scoreInput.value="10"}
-    rg.value=x;paint(x);
+    rg.value=x;paint(x,false);
   };
   scoreInput.onblur=function(){
     if(scoreInput.value===""){scoreInput.value=(+rg.value).toFixed(1);paint(+rg.value);return}
     var x=Math.round(Math.max(0,Math.min(10,Number(scoreInput.value)))*10)/10;
-    scoreInput.value=x.toFixed(1);rg.value=x;paint(x);
+    scoreInput.value=x.toFixed(1);rg.value=x;paint(x,false);
   };
   paint(+(t.r==null?5:t.r));
   function done(val,next){
