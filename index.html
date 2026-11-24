@@ -249,6 +249,7 @@ function artistMatchScore(name,words){
   return words.every(function(w){return n.indexOf(norm(w))>=0})?4000:0;
 }
 async function dzArtistAlbums(words){
+  if(words.length>3)return[];
   var q=words.join(" ");
   var response=await jsonp(DZ+"search/artist?limit=10&q="+encodeURIComponent(q));
   var artists=(response&&response.data)||[];
@@ -311,7 +312,7 @@ async function searchResults(words){
   if(!available)throw new Error("Search providers are unavailable");
   var dedup={};
   all.forEach(function(album){
-    var key=(album.source==="dz-artist"?"deezer:"+album.id:norm(album.artist)+"|"+norm(album.title));
+    var key=norm(album.artist)+"|"+norm(album.title);
     var current=dedup[key];
     if(!current){dedup[key]=album;return}
     current.rank=Math.max(current.rank||0,album.rank||0);
