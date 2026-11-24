@@ -48,7 +48,7 @@ The featured-card parser accepts the chart response as either a direct `data` li
 - **Popularity-ranked search:** resolve exact artist matches, collect Deezer artist albums and top tracks, rank releases using track popularity and album rank, and deduplicate results.
 - **Album-only search:** filter singles while keeping EPs.
 - **Track notes:** add an optional, per-track note stored privately with local ratings.
-- **New home design:** replace the left sidebar and record illustration with horizontal navigation, a prominent search field, a chart-picked album card, and flat dark/light themes without decorative glow or gradients.
+- **New home design:** replace the left sidebar and record illustration with horizontal navigation, a chart-picked album card, and flat dark/light themes without decorative glow or gradients.
 - **Journal home flow:** keep the opening view focused on the hero and featured album, reveal the journal intro and recent ratings as the visitor scrolls, show track note previews, move album search and shared-rating name entry to Rate, and move rating stats to My ratings.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
