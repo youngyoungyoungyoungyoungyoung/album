@@ -346,18 +346,32 @@ function loadPopularAlbum(){
     albums=albums.filter(function(a){return a&&a.id&&isAlbumType(a.record_type||"album")});
     if(!albums.length)throw new Error("No current chart albums");
     var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-24);
-    var recent=albums.filter(function(a){return a.release_date&&new Date(a.release_date)>=cutoff});
-    var pool=recent.length?recent:albums;
-    pool.sort(function(a,b){return(b.release_date||"").localeCompare(a.release_date||"")||(+b.rank||0)-(+a.rank||0)});
-    return pool[0];
+    var ranked=albums.slice().sort(function(a,b){return(+b.rank||0)-(+a.rank||0)}).slice(0,12);
+    return Promise.allSettled(ranked.map(function(a){return jsonp(DZ+"album/"+a.id)})).then(function(details){
+      var candidates=ranked.map(function(a,i){
+        var detail=details[i].status==="fulfilled"?details[i].value:null;
+        if(detail&&!detail.error){
+          if(detail.release_date)a.release_date=detail.release_date;
+          if(!a.cover_medium)a.cover_medium=detail.cover_medium||detail.cover_big||"";
+          if(!a.record_type&&detail.record_type)a.record_type=detail.record_type;
+        }
+        return a;
+      });
+      var recent=candidates.filter(function(a){return a.release_date&&new Date(a.release_date)>=cutoff});
+      if(recent.length){recent.sort(function(a,b){return(b.release_date||"").localeCompare(a.release_date||"")||(+b.rank||0)-(+a.rank||0)});return recent[0]}
+      candidates.sort(function(a,b){return(+b.rank||0)-(+a.rank||0)});
+      return candidates[0];
+    });
   }).catch(function(){popularAlbumPromise=null;return null});
   return popularAlbumPromise;
 }
 function popularCard(album){
   var saved=matchingRatedAlbum(album),score=saved?avg(saved):null;
   var id=saved?saved.id:String(album.id),artist=(album.artist&&album.artist.name)||"",year=(album.release_date||"").slice(0,4);
+  var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-24);
+  var releaseLabel=album.release_date&&new Date(album.release_date)>=cutoff?"RECENT RELEASE":"POPULAR RELEASE";
   var item={id:id,title:album.title,artist:artist,cover:(saved&&saved.cover)||album.cover_medium||album.cover_big||""};
-  return '<div class="featured-card"><div class="featured-top"><div><span class="eyebrow">POPULAR &amp; RECENT</span><small>From the current album chart</small></div><span class="chart-rank">Chart pick</span></div><button class="featured-album" data-feature-id="'+esc(id)+'">'+cover(item)+'<div class="featured-copy"><span class="release-label">RECENT RELEASE'+(year?' · '+esc(year):'')+'</span><h2>'+esc(album.title)+'</h2><p>'+esc(artist)+'</p></div></button><div class="featured-bottom"><div class="featured-score"><span>YOUR RATING</span><strong>'+(score==null?'—':score.toFixed(1))+'</strong><small>'+(score==null?'Not rated yet':'out of 10')+'</small></div><button class="btn" data-feature-id="'+esc(id)+'">'+(score==null?'Rate this album':'Open rating')+'</button></div></div>';
+  return '<div class="featured-card"><div class="featured-top"><div><span class="eyebrow">POPULAR &amp; RECENT</span><small>From the current album chart</small></div><span class="chart-rank">Chart pick</span></div><button class="featured-album" data-feature-id="'+esc(id)+'">'+cover(item)+'<div class="featured-copy"><span class="release-label">'+releaseLabel+(year?' · '+esc(year):'')+'</span><h2>'+esc(album.title)+'</h2><p>'+esc(artist)+'</p></div></button><div class="featured-bottom"><div class="featured-score"><span>YOUR RATING</span><strong>'+(score==null?'—':score.toFixed(1))+'</strong><small>'+(score==null?'Not rated yet':'out of 10')+'</small></div><button class="btn" data-feature-id="'+esc(id)+'">'+(score==null?'Rate this album':'Open rating')+'</button></div></div>';
 }
 
 async function mbSearch(words){
