@@ -1,101 +1,64 @@
-# Rate albume: README de context
+# RateAlbum
 
-Scopul documentului: să-l lipești (împreună cu `rate-albume-v2.html`) într-o conversație nouă cu Claude, ca să continue exact de unde am rămas.
+A lightweight, single-page album rating site hosted with GitHub Pages.
 
-## Ce vrea utilizatorul (decizii luate)
+- **Live site:** https://youngyoungyoungyoungyoungyoung.github.io/album/
+- **Repository:** https://github.com/youngyoungyoungyoungyoungyoung/album
+- **Main app:** `index.html`
+- **Last handoff:** November 24, 2026
 
-- Un **site** unde oricine dă **note albumelor**, fiecare piesă primește o notă, iar nota albumului e **media pieselor notate**.
-- Inspirație: carduri de review de pe TikTok (copertă, cerc cu nota totală, tracklist cu note colorate). Doar inspirație, nu trebuie copiat identic.
-- **Doar note, fără recenzii sau comentarii.**
-- **Fără conturi și fără bază de date.** Se intră ca guest, cu **nickname** ales de utilizator.
-- **Căutare live** de albume reale (ex: „psyk" aduce „psykotic"), cu copertă și tracklist reale, fără completat manual.
-- **Link de share** cu rate-ul tău, pe care prietenii îl deschid și văd cardul.
-- Mai târziu (nu acum): video/card generat pentru TikTok, media comunității, conturi.
-- Limba conversației: română. Preferă soluții simple.
+## What the app does
 
-## Fișiere
+- Search for real albums and EPs, then rate tracks from 0 to 10.
+- Calculate an album score as the average of tracks that have ratings.
+- Add an optional private note to each track (up to 300 characters).
+- Compare two albums, mark the best and lowest rated tracks, and share a read-only rating link.
+- Use the site in English, with dark and light themes.
 
-| Fișier | Stare |
-|---|---|
-| `rate-albume-v3.html` | **Versiunea curentă.** v2 + Album vs Album + BEST/WORST song. |
-| `rate-albume-v2.html` | Versiunea anterioară. Un singur fișier, HTML + CSS + JS, fără build. |
-| `rate-albume.html` | v1, doar MusicBrainz, fără coperți reale. Depășit. |
-| `albume.html` | Primul prototip (introducere manuală, doar localStorage). Depășit. |
+## Search behavior
 
-Se pune online (necesar pentru ca linkurile de share să meargă între prieteni) pe netlify.com/drop sau GitHub Pages. Poate fi deschis și direct din folder.
+- Search prefers an exact artist match and uses Deezer popularity signals to put that artist's releases near the top. For example, searching for “Yeat” should prioritize Yeat's releases over unrelated title matches.
+- Search results are deduplicated by artist and album title.
+- Singles are filtered out. Deezer results allow albums, EPs, compilations, and live albums; MusicBrainz fallback results allow albums and EPs.
+- Deezer album rank and artist fan counts are shown when available. MusicBrainz provides fallback search results and tracklists.
 
-## Arhitectură (v2)
+## Ratings and notes
 
-Vanilla JS, fără framework. Se randează prin `app.innerHTML`. Rutare pe `location.hash`:
+- Ratings and notes are saved in this browser's local storage under `rate2`; there is no account or server database.
+- Notes belong to individual tracks, are optional, and are not included in shared links.
+- Shared links contain the album and rating data needed for a read-only view. A visitor can copy the album into their own list to rate it.
 
-- `""` → `home()`: nickname, căutare, „Rate-urile mele".
-- `#a=<id>` → `openAlbum(id)`: încarcă albumul și arată `page(a)`.
-- `#s=<payload>` → `shared(p)`: vedere read-only a rate-ului unui prieten.
-- `#v=<idA>,<idB>` → `versus(s)`: Album vs Album (oricare id poate lipsi; slotul gol are căutare proprie).
+## Design direction
 
-### Surse de date
+The current direction is a restrained, editorial music app: dark ink backgrounds, warm cream text, bold condensed headings, simple dividers, and a small set of mint, coral, and warm yellow accents. The user asked to avoid the purple gradients, heavy glow, and generic dark AI/SaaS look. Keep UI text in English.
 
-1. **MusicBrainz** (`musicbrainz.org/ws/2/`, fetch cu CORS): căutare de release-groups cu wildcard (`psyk*`). Doar Album și EP, cu deduplicare. Limită de ~1 cerere/s: funcția `j()` reîncearcă de 3 ori la 503/429.
-2. **Deezer** (`api.deezer.com`) prin **JSONP** (funcția `jsonp()`), pentru că nu are CORS:
-   - `dzFind(titlu, artist)` caută albumul și verifică potrivirea numelor (primele 5 litere normalizate);
-   - `dzTracks(id)` aduce tracklistul;
-   - `dzSearch(words)` e căutarea de rezervă dacă MusicBrainz pică sau nu găsește nimic.
-3. **Cover Art Archive** (`coverartarchive.org/release-group/<mbid>/front-250`) e ultima rezervă pentru copertă. Are acoperire slabă la albume noi, de aceea s-a trecut la Deezer.
-4. Dacă Deezer nu găsește albumul, tracklistul vine de la MusicBrainz (`mbTracks`).
+## How it is built
 
-### Identificatori
+- One vanilla HTML/CSS/JavaScript file; no build step or framework.
+- MusicBrainz is queried with `fetch`. Deezer is accessed through JSONP because of browser cross-origin restrictions.
+- Cover Art Archive is a fallback for MusicBrainz artwork.
+- Hash routes include album view (`#a=...`), shared view (`#s=...`), album comparison (`#v=...`), and the ratings list (`#ratings`).
 
-- Id MusicBrainz = UUID (conține `-`), verificat cu `isMb(id)`.
-- Id Deezer = număr. Albumele găsite doar pe Deezer au id numeric.
+## Recent changes
 
-### Date salvate (localStorage, cheia `rate2`)
+- **Popularity-ranked search:** resolve exact artist matches, collect Deezer artist albums and top tracks, rank releases using track popularity and album rank, and deduplicate results.
+- **Album-only search:** filter singles while keeping EPs.
+- **Track notes:** add an optional, per-track note stored privately with local ratings.
+- **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
-```
-{ nick: "nume",
-  mine: { "<id>": { id, title, artist, year, cover, u: timestamp,
-                    tracks: [ { name, r: nota 0–10 sau null } ] } } }
-```
+Relevant commits:
 
-Cheia veche `rate1` (v1) nu e migrată.
+- [1ab9d1d — rank search by artist and Deezer popularity](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/1ab9d1dbed3d91db143c138bbc9d92bd589faec7)
+- [efd4365 — deduplicate popularity-ranked artist results](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/efd436550cd3a44568d9816583d11221f560f394)
+- [48d25d8 — filter singles and add private track notes](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/48d25d8c1ce9659094b1f96bb5b575029c3581eb)
+- [8404083 — include EPs](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/84040831c2bcea5ccffa041f0df35f780e798b08)
+- [bff70da — repair the page-loading script](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1)
 
-### Link de share (fără server)
+## Next session
 
-Totul e codat în URL: `#s=` + base64url(JSON) cu câmpurile `{n: nickname, i: id, t: titlu, a: artist, y: an, c: copertă, k: [piese], r: [note]}`. Coperta din link e acceptată doar dacă e pe `*.dzcdn.net` (`imgOk`), ca să nu poată fi pus un URL arbitrar. Butonul „Dă și tu note" copiază albumul în lista celui care deschide linkul, cu note goale.
+1. Check the newest **Actions → Pages build and deployment** run on `main`. The previous screenshot showed an earlier failed run; the JavaScript parse error was then fixed in `bff70da`. The Pages status and live page have not yet been verified after that repair.
+2. Open the live site and confirm it loads instead of showing a blank page or a lone newline.
+3. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
+4. Rate a track, add a note, close/reopen its rating dialog, and confirm the note persists.
 
-### Funcții principale
-
-`home`, `search` (`mbSearch` → `dzSearch`), `openAlbum`, `page(a, ro, by)`, `rate(i)` (fereastra cu slider, butoane 1–10 și „Următoarea →"), `shareLink`, `shared`, `route`, `ring(m)`, `cover(a,id)` / `setCover`, `avg(a)`, `col(nota)` (culoare pe notă, paleta `COL`).
-
-## Probleme întâlnite și rezolvate
-
-- **Coperți lipsă** (gradient în loc de poză): Cover Art Archive nu le are → Deezer.
-- **„Căutarea a eșuat"**: cauză probabilă MusicBrainz ocupat/rate limit → reîncercări + căutare de rezervă pe Deezer + motivul erorii afișat în mesaj.
-- **Legenda 10–0** copiată din cardul TikTok nu făcea nimic în interfață → scoasă.
-
-## Limitări cunoscute
-
-- Netestat de Claude pe date reale (mediul lui nu are acces la MusicBrainz/Deezer); testarea o face utilizatorul și raportează.
-- Deezer nu caută pe prefix: „psyk" găsește „psykotic" doar prin MusicBrainz.
-- Notele sunt doar în browserul utilizatorului (se pierd la ștergerea datelor); linkurile de share trimise rămân valabile.
-- Un link de share are câteva sute de caractere, deci e lung dar funcțional.
-
-## UI (v2.1, redesign)
-
-Temă închisă ca implicit (cu variantă deschisă) și **buton rotund sus-dreapta pentru comutare noapte/zi** (alegerea se salvează în localStorage, cheia `theme`; fără alegere se folosește tema sistemului), glow și gradient pe fundal, font Space Grotesk (cu fallback), titlu „hero" pe pagina de start, insignă cu nota pe copertele din „Rate-urile mele", fundal estompat din copertă pe pagina albumului, cerc cu strălucire, **piese afișate ca butoane cu contur** (conturul și o bară de fundal proporțională cu nota iau culoarea notei; piesele nenotate au contur discret), fereastra de rating tintată în culoarea notei curente.
-
-## v3: funcții noi
-
-- **BEST / WORST song**: în fiecare album, piesa cu nota cea mai mare e verde, cea mai mică roșie, restul albe (nenotatele rămân discrete). Apare doar dacă ai cel puțin 2 piese notate cu note diferite; la egalitate sunt evidențiate toate piesele cu nota maximă/minimă. Logica e în `roles(a)` și `trk(a,i,R,sym)`.
-- **Album vs Album**: butonul „⚔ Album vs Album" pe pagina de start și pe pagina unui album. Două coloane, fiecare cu copertă, cerc cu media, tracklist notabil și buton „Notează piesele"; cel cu media mai mare primește „CÂȘTIGĂ". Notele se salvează la fel ca în rest (`rate2`).
-- Refactor: `rate(a,i,re)` primește albumul și funcția de redesenare; `loadAlbum(id)` încarcă un album fără să-l afișeze (cu cache `alb`); `search(v,box,pick)` e reutilizabilă.
-
-## Idei pentru mai târziu
-
-1. Card/video pentru TikTok din rate-ul unui album (imagine descărcabilă).
-2. Media comunității: necesită backend (Supabase cu autentificare anonimă; invitatul poate deveni cont fără să piardă notele) și protecții anti-abuz.
-3. Link de profil cu toate albumele notate.
-4. Tier list, comparație între prieteni, clasament pe discografie.
-
-## Cum mă pui la curent data viitoare
-
-Spune-mi: „continuăm proiectul din README", încarcă acest fișier și `rate-albume-v3.html`, apoi scrie ce vrei schimbat.
+Start by reading this README and `index.html`, then continue from the checklist above.
