@@ -238,28 +238,104 @@ async function mbSearch(words){
     var k=norm(x.title)+norm(artistOf(x));if(seen[k])return false;seen[k]=1;return true}).slice(0,18).map(function(x){
     return{id:x.id,title:x.title,artist:artistOf(x),year:(x["first-release-date"]||"").slice(0,4),source:"mb",rank:0}})}
 async function dzSearch(words){
-  var d=await jsonp(DZ+"search/album?limit=25&q="+encodeURIComponent(words.join(" ")));
-  return((d&&d.data)||[]).map(function(x){return{id:String(x.id),title:x.title,artist:(x.artist&&x.artist.name)||"",year:(x.release_date||"").slice(0,4),cover:x.cover_medium||x.cover_big||"",source:"dz",rank:+x.rank||0}})}
+  var d=await jsonp(DZ+"search/album?limit=30&q="+encodeURIComponent(words.join(" ")));
+  return((d&&d.data)||[]).map(function(x){return{id:String(x.id),title:x.title,artist:(x.artist&&x.artist.name)||"",year:(x.release_date||"").slice(0,4),cover:x.cover_medium||x.cover_big||"",source:"dz",rank:+x.rank||0,popularityRank:+x.rank||0}});
+}
+function artistMatchScore(name,words){
+  var n=norm(name),q=norm(words.join(" "));
+  if(!n||!q)return 0;
+  if(n===q)return 10000;
+  if(n.indexOf(q)>=0)return 6000;
+  return words.every(function(w){return n.indexOf(norm(w))>=0})?4000:0;
+}
+async function dzArtistAlbums(words){
+  var q=words.join(" ");
+  var response=await jsonp(DZ+"search/artist?limit=10&q="+encodeURIComponent(q));
+  var artists=(response&&response.data)||[];
+  artists=artists.map(function(a){return{data:a,score:artistMatchScore(a.name||"",words)}})
+    .filter(function(a){return a.score>=4000})
+    .sort(function(a,b){return b.score-a.score||(+b.data.nb_fan||0)-(+a.data.nb_fan||0)});
+  if(!artists.length)return[];
+  var artist=artists[0].data,base=DZ+"artist/"+artist.id;
+  var details=await Promise.allSettled([
+    jsonp(base+"/albums?limit=100"),
+    jsonp(base+"/top?limit=50")
+  ]);
+  var byId={};
+  function addAlbum(album){
+    if(!album||!album.id)return null;
+    var id=String(album.id),entry=byId[id];
+    if(!entry){
+      entry=byId[id]={id:id,title:album.title||"",artist:artist.name||"",year:(album.release_date||"").slice(0,4),cover:album.cover_medium||album.cover_big||album.cover||"",source:"dz-artist",rank:+album.rank||0,popularityRank:+album.rank||0,trackRanks:[],artistFans:+artist.nb_fan||0,artistExact:true};
+    }else{
+      entry.rank=Math.max(entry.rank||0,+album.rank||0);
+      entry.popularityRank=Math.max(entry.popularityRank||0,+album.rank||0);
+      if(!entry.cover)entry.cover=album.cover_medium||album.cover_big||album.cover||"";
+      if(!entry.year&&album.release_date)entry.year=album.release_date.slice(0,4);
+    }
+    return entry;
+  }
+  if(details[0].status==="fulfilled")((details[0].value&&details[0].value.data)||[]).forEach(addAlbum);
+  if(details[1].status==="fulfilled")((details[1].value&&details[1].value.data)||[]).forEach(function(track){
+    var entry=addAlbum(track.album);
+    if(entry){
+      var rank=+track.rank||0;
+      if(rank>0){entry.trackRanks.push(rank);entry.popularityRank=Math.max(entry.popularityRank||0,rank)}
+    }
+  });
+  return Object.keys(byId).map(function(id){
+    var album=byId[id],ranks=album.trackRanks.sort(function(a,b){return b-a});
+    album.trackSignals=ranks.length;
+    album.trackPopularity=ranks.slice(0,3).reduce(function(total,rank){return total+rank},0);
+    delete album.trackRanks;
+    return album;
+  });
+}
+function formatPopularity(value){
+  if(!value)return"";
+  try{return new Intl.NumberFormat("en",{notation:"compact",maximumFractionDigits:1}).format(value)}
+  catch(e){return String(value)}
+}
 function matchScore(m,words){
-  var q=norm(words.join(" ")),title=norm(m.title),artist=norm(m.artist),full=artist+title,score=0;
-  if(title===q)score+=1000;
-  if(full===q)score+=1100;
-  if(title.indexOf(q)>=0)score+=500;
-  if(artist.indexOf(q)>=0)score+=420;
-  if(full.indexOf(q)>=0)score+=350;
-  words.forEach(function(w){var n=norm(w);if(n&&title.indexOf(n)>=0)score+=55;if(n&&artist.indexOf(n)>=0)score+=65});
+  var q=norm(words.join(" ")),title=norm(m.title),artist=norm(m.artist),score=0;
+  if(artist===q)score+=10000;
+  else if(q&&artist.indexOf(q)>=0)score+=6000;
+  if(title===q)score+=3000;
+  else if(q&&title.indexOf(q)>=0)score+=1800;
+  words.forEach(function(w){var n=norm(w);if(n&&title.indexOf(n)>=0)score+=45;if(n&&artist.indexOf(n)>=0)score+=60});
   return score;
 }
 async function searchResults(words){
-  var settled=await Promise.allSettled([mbSearch(words),dzSearch(words)]),all=[],available=false;
-  settled.forEach(function(r){if(r.status==="fulfilled"){all=all.concat(r.value);available=true}});
+  var settled=await Promise.allSettled([dzArtistAlbums(words),dzSearch(words),mbSearch(words)]),all=[],available=false;
+  settled.forEach(function(result){if(result.status==="fulfilled"){all=all.concat(result.value);available=true}});
   if(!available)throw new Error("Search providers are unavailable");
   var dedup={};
-  all.forEach(function(m){var key=norm(m.artist)+"|"+norm(m.title);if(!dedup[key]||(m.rank||0)>(dedup[key].rank||0))dedup[key]=m});
-  return Object.keys(dedup).map(function(k){return dedup[k]}).sort(function(a,b){
-    var relevance=matchScore(b,words)-matchScore(a,words);if(relevance)return relevance;
-    var popularity=Math.log10((b.rank||0)+1)-Math.log10((a.rank||0)+1);if(popularity)return popularity;
-    return (b.year||"").localeCompare(a.year||"");
+  all.forEach(function(album){
+    var key=(album.source==="dz-artist"?"deezer:"+album.id:norm(album.artist)+"|"+norm(album.title));
+    var current=dedup[key];
+    if(!current){dedup[key]=album;return}
+    current.rank=Math.max(current.rank||0,album.rank||0);
+    current.popularityRank=Math.max(current.popularityRank||0,album.popularityRank||0);
+    current.trackPopularity=Math.max(current.trackPopularity||0,album.trackPopularity||0);
+    current.trackSignals=Math.max(current.trackSignals||0,album.trackSignals||0);
+    current.artistFans=Math.max(current.artistFans||0,album.artistFans||0);
+    current.artistExact=current.artistExact||album.artistExact;
+    if(!current.cover&&album.cover)current.cover=album.cover;
+    if(!current.year&&album.year)current.year=album.year;
+  });
+  return Object.keys(dedup).map(function(key){return dedup[key]}).sort(function(a,b){
+    if(!!a.artistExact!==!!b.artistExact)return a.artistExact?-1:1;
+    if(a.artistExact&&b.artistExact){
+      var trackPopularity=(b.trackPopularity||0)-(a.trackPopularity||0);
+      if(trackPopularity)return trackPopularity;
+      var discographyRank=(b.rank||0)-(a.rank||0);
+      if(discographyRank)return discographyRank;
+    }
+    var relevance=matchScore(b,words)-matchScore(a,words);
+    if(relevance)return relevance;
+    var popularity=(b.popularityRank||b.rank||0)-(a.popularityRank||a.rank||0);
+    if(popularity)return popularity;
+    return(b.year||"").localeCompare(a.year||"");
   }).slice(0,18);
 }
 async function search(v,box,pick){
@@ -274,7 +350,9 @@ async function search(v,box,pick){
   var P="c"+(box.id||"x")+"_";
   box.innerHTML=list.map(function(m){
     found[m.id]=m;
-    return'<button class="res" data-id="'+esc(m.id)+'">'+cover(m,P+m.id)+'<div><div class="t">'+esc(m.title)+'</div><div class="a">'+esc(m.artist)+(m.year?" · "+esc(m.year):"")+'</div></div></button>'}).join("");
+    var meta=esc(m.artist)+(m.year?" · "+esc(m.year):"");
+    var popularity=m.popularityRank?'<div style="font-size:9px;letter-spacing:.45px;color:var(--accent);margin-top:2px">DEEZER RANK '+formatPopularity(m.popularityRank)+(m.artistFans?' · '+formatPopularity(m.artistFans)+' FANS':'')+'</div>':'';
+    return'<button class="res" data-id="'+esc(m.id)+'">'+cover(m,P+m.id)+'<div><div class="t">'+esc(m.title)+'</div><div class="a">'+meta+'</div>'+popularity+'</div></button>'}).join("");
   box.querySelectorAll(".res").forEach(function(b){
     b.onclick=function(){pick(b.dataset.id)};
     var m=found[b.dataset.id];if(m.cover||!isMb(m.id))return;
