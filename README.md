@@ -30,9 +30,9 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 
 ## Design direction
 
-The refreshed direction follows the user's marked-up reference: a clean horizontal menu for Discover, My ratings, Album vs album, and a Sign in placeholder. The home page opens on the headline and featured popular recent album card. Scrolling reveals a short journal introduction with a Rate albums button and a Recently rated section that previews private track notes. Album search and the shared-rating name field live on the Rate page. Album, track, and average stats live on My ratings. Use a flat midnight-blue palette in dark mode and a pale neutral palette in light mode. Keep both themes, with no background dots, gradients, or glow. UI text stays in English.
+The current direction is a clean album journal with a black-and-green dark theme and a soft green-tinted light theme. Keep both themes, no background dots, gradients, or glow. The home page opens on the headline and featured album, then reveals the journal introduction and recently rated records while scrolling. Each recent album can show private track-note excerpts. Album search and the shared-rating name field live on the Rate page; album, track, and average stats live on My ratings. The header uses a compact pill-style navigation and a single aligned theme icon.
 
-The featured pick comes from Deezer's current album chart. It checks details for the twelve highest-ranked chart albums, then picks the newest release from roughly the last two years when available; otherwise it uses the highest-ranked chart album. It shows the user's saved rating when one exists; otherwise it clearly says “Not rated yet” and offers to rate the album. Do not invent a score. Sign in is a placeholder for now; real accounts are a later feature.
+The featured card supports an owner-maintained OWNER_FEATURED_PICK setting with the album, owner score, and per-track scores. It displays the pick as “Curator’s pick.” Update this setting and publish to change the public feature; the site is static, so a public on-page editor would not safely publish updates for everyone. Until an owner pick is configured, the featured card uses the existing chart selection. Never invent album or track scores. Sign in is a placeholder for now; real accounts are a later feature.
 
 The featured-card parser accepts the chart response as either a direct `data` list or the wrapped `albums.data` form. If no valid chart entries are returned, it falls back to a search prompt; do not invent a score or hard-code a stale album.
 
@@ -50,6 +50,8 @@ The featured-card parser accepts the chart response as either a direct `data` li
 - **Track notes:** add an optional, per-track note stored privately with local ratings.
 - **New home design:** replace the left sidebar and record illustration with horizontal navigation, a chart-picked album card, and flat dark/light themes without decorative glow or gradients.
 - **Journal home flow:** keep the opening view focused on the hero and featured album, reveal the journal intro and recent ratings as the visitor scrolls, show track note previews, move album search and shared-rating name entry to Rate, and move rating stats to My ratings.
+- **Black-and-green UI:** recolor the dark theme, align the theme toggle, remove the topbar divider, and refine navigation, album detail, and rating dialog styling.
+- **Direct score entry:** allow decimal ratings from 0 to 10 in one-tenth steps alongside the slider, and make the optional track note field fill the rating dialog.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
 Relevant commits:
