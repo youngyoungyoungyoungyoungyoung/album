@@ -240,12 +240,12 @@ async function mbSearch(words){
   var A=words.map(function(w){return w+"*"}).join(" AND "),seen={};
   var d=await j(MB+"release-group?fmt=json&limit=30&query="+encodeURIComponent("("+A+") OR releasegroup:("+A+") OR artist:("+A+")"));
   return(d["release-groups"]||[]).filter(function(x){
-    if(x["primary-type"]!=="Album")return false;
+    if(x["primary-type"]!=="Album"&&x["primary-type"]!=="EP")return false;
     var k=norm(x.title)+norm(artistOf(x));if(seen[k])return false;seen[k]=1;return true}).slice(0,18).map(function(x){
     return{id:x.id,title:x.title,artist:artistOf(x),year:(x["first-release-date"]||"").slice(0,4),source:"mb",recordType:"album",rank:0}})}
 function isAlbumType(value){
   var type=String(value||"").toLowerCase();
-  return type==="album"||type==="compilation"||type==="live";
+  return type==="album"||type==="ep"||type==="compilation"||type==="live";
 }
 async function dzSearch(words){
   var d=await jsonp(DZ+"search/album?limit=30&q="+encodeURIComponent(words.join(" ")));
