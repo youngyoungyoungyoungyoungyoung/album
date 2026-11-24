@@ -32,7 +32,7 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 
 The refreshed direction follows the user's marked-up reference: a clean horizontal menu for Discover, My ratings, Album vs album, and a Sign in placeholder. The home page pairs album search with a featured popular recent album card. Use a flat midnight-blue palette in dark mode and a pale neutral palette in light mode. Keep both themes, with no background dots, gradients, or glow. UI text stays in English.
 
-The featured pick comes from Deezer's current album chart, choosing the newest release among charted albums from roughly the last two years (or the newest chart entry when none meet that window). It shows the user's saved rating when one exists; otherwise it clearly says “Not rated yet” and offers to rate the album. Do not invent a score. Sign in is a placeholder for now; real accounts are a later feature.
+The featured pick comes from Deezer's current album chart. It checks details for the twelve highest-ranked chart albums, then picks the newest release from roughly the last two years when available; otherwise it uses the highest-ranked chart album. It shows the user's saved rating when one exists; otherwise it clearly says “Not rated yet” and offers to rate the album. Do not invent a score. Sign in is a placeholder for now; real accounts are a later feature.
 
 The featured-card parser accepts the chart response as either a direct `data` list or the wrapped `albums.data` form. If no valid chart entries are returned, it falls back to a search prompt; do not invent a score or hard-code a stale album.
 
