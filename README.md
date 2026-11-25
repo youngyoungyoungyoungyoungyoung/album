@@ -5,7 +5,7 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 - **Live site:** https://youngyoungyoungyoungyoungyoung.github.io/album/
 - **Repository:** https://github.com/youngyoungyoungyoungyoungyoung/album
 - **Main app:** `index.html`
-- **Last handoff:** November 24, 2026
+- **Last handoff:** November 25, 2026
 
 ## What the app does
 
@@ -30,11 +30,12 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 
 ## Design direction
 
-The current direction is an album journal with black-and-green dark colors, a soft green-tinted light theme, and a vivid mint welcome panel. Keep both themes, with no background dots, gradients, glow, or thin divider lines between homepage sections. The first screen contains only the horizontal navigation and a split-screen welcome with the exact headline “Albums, rated your way.” Scrolling reveals an animated album walkthrough: the owner’s featured album card shows cover art, track-by-track ratings, selected notes, and the album average, beside short explanations of those details. Label the feature “Handpicked” / “Owner’s pick,” not “Popular & Recent” or “Editor’s Choice.” Do not invent the owner’s album, scores, or notes; keep the placeholder until the owner supplies them. Follow with recently rated albums. Album search and shared-rating name entry live on the Rate page; album, track, and average stats live on My ratings. The header uses compact pill-style navigation and a single aligned theme icon.
+The current direction is an album journal with black-and-green dark colors, a soft green-tinted light theme, and a vivid mint welcome panel. Keep both themes, with no background dots, gradients, glow, or thin divider lines between homepage sections. The first screen contains only horizontal navigation and a split-screen welcome with the exact headline “Albums, rated your way.” Scrolling reveals the owner’s featured album card, all track scores, supplied notes, and album average beside short explanations. The owner pick is labeled “Handpicked” / “Owner’s pick.” Follow with recently rated albums. Album search and shared-rating name entry live on the Rate page; stats live on My ratings. The header stays fixed with the theme switch and navigation together.
 
-The featured card supports an owner-maintained OWNER_FEATURED_PICK setting with album ID or title and artist, optional cover URL, optional album average, and tracks containing name, score, and optional note. Update this setting and publish to change the public feature; the site is static, so a public on-page editor cannot publish changes for everyone. Until an owner pick is configured, keep the explanatory placeholder rather than choosing a chart album or inventing ratings. Notes included in this public featured card are visible to visitors. Sign in is a placeholder for now; real accounts are a later feature.
+The featured card uses owner-maintained OWNER_FEATURED_PICK data: album ID or title and artist, optional cover URL, album average, and tracks containing name, score, and optional note. The current pick is “BAD ASS F*CKING KID” by Nettspend. The screenshot supplied the 15 track scores and 7.8 average; the text of the note marked on “LAUGHIN” has not been supplied yet. Do not invent that note. Update the owner setting and publish to change the public feature; the site is static, so a public on-page editor cannot publish changes for everyone. Any note added to this public featured card is visible to visitors. Sign in is a placeholder for now; real accounts are a later feature.
 
-The featured-card parser accepts the chart response as either a direct `data` list or the wrapped `albums.data` form. It remains in place for future discovery features, but the homepage no longer falls back to an automatically chosen chart album.
+The homepage no longer falls back to an automatically chosen chart album. Its listener photo is from [Amari Shutters on Unsplash](https://unsplash.com/photos/young-woman-with-headphones-listening-to-music-A6kViIz3cdQ) and is free to use under the Unsplash License.
+
 ## How it is built
 
 - One vanilla HTML/CSS/JavaScript file; no build step or framework.
@@ -52,6 +53,9 @@ The featured-card parser accepts the chart response as either a direct `data` li
 - **Black-and-green UI:** recolor the dark theme, align the theme toggle, remove the topbar divider, and refine navigation, album detail, and rating dialog styling.
 - **Direct score entry:** make the large score at the top of the rating dialog itself editable from 0 to 10 in one-tenth steps, alongside the slider, with no separate score box; keep the optional track note field full-width.
 - **Featured notes:** support optional public per-track notes and calculate the album average from the supplied scores when no explicit average is set.
+- **Theme and navigation:** move the light/dark switch into the sticky menu and apply both palettes to the whole page; hide the browser scrollbars while keeping scrolling enabled.
+- **Homepage photo:** replace the vinyl graphic with an editorial photo of a woman listening to music, tinted to match the selected theme.
+- **Shared ratings:** ask for a username when creating a share link if none is saved, and label shared scores as listener ratings rather than official scores.
 - **Centered journal intro:** this was the previous layout; the scroll walkthrough replaces it.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
@@ -65,7 +69,7 @@ Relevant commits:
 
 ## Next session
 
-1. Add the owner-provided album, track scores, and selected notes to `OWNER_FEATURED_PICK`; notes configured for this public card will be visible to visitors.
+1. Add the missing note text for “LAUGHIN” to `OWNER_FEATURED_PICK` if it should appear in the public card.
 2. Check the newest **Actions → Pages build and deployment** run on `main`, then open the live site and confirm it loads.
 3. Review the desktop and mobile split-screen welcome, scroll reveal, Rate page, My ratings stats, and dark/light themes.
 4. Confirm the owner-picked card shows its cover, track scores and notes, and album average.
