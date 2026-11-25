@@ -57,6 +57,7 @@ The homepage no longer falls back to an automatically chosen chart album. The le
 - **Homepage visual:** replace the low-resolution cropped listener photo with a sharp, responsive editorial scorecard built in HTML/CSS from the current owner-picked album and track notes.
 - **Shared ratings:** ask for a username when creating a share link if none is saved, and label shared scores as listener ratings rather than official scores.
 - **Header and score colors:** keep the full menu and theme switch together at the top of every page, then let them scroll away; distinguish best tracks in lime, worst and very low scores in red, and keep ordinary and unrated tracks neutral. Color the album average by its actual score on a red-to-amber-to-green scale. Align homepage explainer copy and recently rated covers.
+- **Album vs album winner:** frame the winning album and place a tilted crown emoji over the cover, without adding a label that shifts the comparison layout.
 - **Centered journal intro:** this was the previous layout; the scroll walkthrough replaces it.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
