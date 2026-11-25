@@ -447,7 +447,7 @@ dialog{border-radius:18px;padding:25px;background:var(--panel)}
 @media(prefers-reduced-motion:reduce){.reveal .walkthrough-featured,.reveal .walkthrough-intro,.reveal .explain-card,.explain-card{transition:none!important;transform:none!important}.reveal:not(.is-visible) .walkthrough-featured,.reveal:not(.is-visible) .walkthrough-intro,.reveal:not(.is-visible) .explain-card{opacity:1}}
 </style>
 <style>
-/* Keep the theme switch with the sticky navigation, and apply the palette to the whole page. */
+/* Keep the theme switch with the top navigation, and apply the palette to the whole page. */
 :root{--hero:#a8f0ae;--hero-ink:#101811;--hero-muted:#263b2a;--photo-tint:rgba(117,222,132,.38)}
 :root[data-theme="light"]{--hero:#edf7e8;--hero-ink:#1c2a1f;--hero-muted:#617366;--photo-tint:rgba(213,239,205,.35)}
 html,body{max-width:100%;overflow-x:clip;scrollbar-width:none;-ms-overflow-style:none}
@@ -477,7 +477,7 @@ html,body{max-width:100%;overflow-x:clip;scrollbar-width:none;-ms-overflow-style
 
 <style>
 /* Pin navigation as a single unit, with the theme control beside it. */
-.topbar{position:sticky;top:0;z-index:100;isolation:isolate;background:var(--bg)}
+.topbar{position:relative;top:auto;z-index:auto;isolation:auto;background:var(--bg)}
 /* The uploaded listener photo is a transparent cutout and fills the left panel. */
 .hero-split .hero-visual{overflow:hidden}
 .hero-listener{inset:auto auto 0 50%;width:100%;height:100%;object-fit:contain;object-position:center bottom;transform:translateX(-50%) scale(1.07);filter:none}
