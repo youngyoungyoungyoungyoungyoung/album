@@ -25,17 +25,16 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 ## Ratings and notes
 
 - Ratings and notes are saved in this browser's local storage under `rate2`; there is no account or server database.
-- Notes belong to individual tracks, are optional, and are not included in shared links.
+- Notes belong to individual tracks, are optional, and are not included in shared links. Notes added to the public homepage feature are visible to visitors.
 - Shared links contain the album and rating data needed for a read-only view. A visitor can copy the album into their own list to rate it.
 
 ## Design direction
 
-The current direction is a clean album journal with a black-and-green dark theme and a soft green-tinted light theme. Keep both themes, no background dots, gradients, or glow. The home page opens on the headline and featured album, then reveals the centered journal introduction and recently rated records while scrolling. Keep the intro headline, description, and Rate albums button grouped and centered. Each recent album can show private track-note excerpts. Album search and the shared-rating name field live on the Rate page; album, track, and average stats live on My ratings. The header uses a compact pill-style navigation and a single aligned theme icon.
+The current direction is an album journal with black-and-green dark colors, a soft green-tinted light theme, and a vivid mint welcome panel. Keep both themes, with no background dots, gradients, glow, or thin divider lines between homepage sections. The first screen contains only the horizontal navigation and a split-screen welcome with the exact headline “Albums, rated your way.” Scrolling reveals an animated album walkthrough: the owner’s featured album card shows cover art, track-by-track ratings, selected notes, and the album average, beside short explanations of those details. Label the feature “Handpicked” / “Owner’s pick,” not “Popular & Recent” or “Editor’s Choice.” Do not invent the owner’s album, scores, or notes; keep the placeholder until the owner supplies them. Follow with recently rated albums. Album search and shared-rating name entry live on the Rate page; album, track, and average stats live on My ratings. The header uses compact pill-style navigation and a single aligned theme icon.
 
-The featured card supports an owner-maintained OWNER_FEATURED_PICK setting with the album, owner score, and per-track scores. It displays the pick as “Curator’s pick.” Update this setting and publish to change the public feature; the site is static, so a public on-page editor would not safely publish updates for everyone. Until an owner pick is configured, the featured card uses the existing chart selection. Never invent album or track scores. Sign in is a placeholder for now; real accounts are a later feature.
+The featured card supports an owner-maintained OWNER_FEATURED_PICK setting with album ID or title and artist, optional cover URL, optional album average, and tracks containing name, score, and optional note. Update this setting and publish to change the public feature; the site is static, so a public on-page editor cannot publish changes for everyone. Until an owner pick is configured, keep the explanatory placeholder rather than choosing a chart album or inventing ratings. Notes included in this public featured card are visible to visitors. Sign in is a placeholder for now; real accounts are a later feature.
 
-The featured-card parser accepts the chart response as either a direct `data` list or the wrapped `albums.data` form. If no valid chart entries are returned, it falls back to a search prompt; do not invent a score or hard-code a stale album.
-
+The featured-card parser accepts the chart response as either a direct `data` list or the wrapped `albums.data` form. It remains in place for future discovery features, but the homepage no longer falls back to an automatically chosen chart album.
 ## How it is built
 
 - One vanilla HTML/CSS/JavaScript file; no build step or framework.
@@ -48,11 +47,12 @@ The featured-card parser accepts the chart response as either a direct `data` li
 - **Popularity-ranked search:** resolve exact artist matches, collect Deezer artist albums and top tracks, rank releases using track popularity and album rank, and deduplicate results.
 - **Album-only search:** filter singles while keeping EPs.
 - **Track notes:** add an optional, per-track note stored privately with local ratings.
-- **New home design:** replace the left sidebar and record illustration with horizontal navigation, a chart-picked album card, and flat dark/light themes without decorative glow or gradients.
-- **Journal home flow:** keep the opening view focused on the hero and featured album, reveal the journal intro and recent ratings as the visitor scrolls, show track note previews, move album search and shared-rating name entry to Rate, and move rating stats to My ratings.
+- **New home design:** replace the sidebar and first-screen chart card with a mint split-screen welcome, then a scroll-revealed owner-picked album card.
+- **Journal home flow:** reveal owner track scores, selected notes, cover art, and album average with explanatory cards on scroll; follow with recently rated albums. Keep search on Rate and stats on My ratings.
 - **Black-and-green UI:** recolor the dark theme, align the theme toggle, remove the topbar divider, and refine navigation, album detail, and rating dialog styling.
 - **Direct score entry:** make the large score at the top of the rating dialog itself editable from 0 to 10 in one-tenth steps, alongside the slider, with no separate score box; keep the optional track note field full-width.
-- **Centered journal intro:** center the section headline, description, and Rate albums button together on desktop and mobile.
+- **Featured notes:** support optional public per-track notes and calculate the album average from the supplied scores when no explicit average is set.
+- **Centered journal intro:** this was the previous layout; the scroll walkthrough replaces it.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
 Relevant commits:
@@ -65,11 +65,12 @@ Relevant commits:
 
 ## Next session
 
-1. Check the newest **Actions → Pages build and deployment** run on `main`, then open the live site and confirm it loads.
-2. Review the desktop and mobile home hero, scroll reveal, Rate page, My ratings stats, and flat dark/light themes.
-3. Confirm the featured chart card loads a current album and handles a missing chart response with its Rate page fallback.
-4. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
-5. Rate a track, add a note, and confirm the note appears on recent album cards and remains private in shared links.
+1. Add the owner-provided album, track scores, and selected notes to `OWNER_FEATURED_PICK`; notes configured for this public card will be visible to visitors.
+2. Check the newest **Actions → Pages build and deployment** run on `main`, then open the live site and confirm it loads.
+3. Review the desktop and mobile split-screen welcome, scroll reveal, Rate page, My ratings stats, and dark/light themes.
+4. Confirm the owner-picked card shows its cover, track scores and notes, and album average.
+5. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
+6. Rate a track, add a note, and confirm it appears on recent album cards and remains private in shared links.
 
 Start by reading this README and `index.html`, then continue from the checklist above.
 
