@@ -338,6 +338,114 @@ dialog{border-radius:18px;padding:25px;background:var(--panel)}
   .stat,.stat:nth-child(2),.stat:nth-child(3){min-height:72px;padding:10px 8px}
 }
 </style>
+<style>
+/* Bright split-screen welcome; the album walkthrough begins below the fold. */
+.hero.hero-split{position:relative;display:grid;width:100vw;min-height:calc(100svh - 78px);grid-template-columns:1fr 1fr;gap:0;align-items:stretch;margin:0 0 70px;margin-left:calc(50% - 50vw);overflow:hidden;background:#a8f0ae;color:#101811}
+.hero-split .hero-visual,.hero-split .hero-copy{position:relative;display:flex;min-width:0;flex-direction:column;justify-content:center;padding:clamp(28px,6vw,96px);background:#a8f0ae;color:#101811}
+.hero-split .hero-visual{min-height:540px;overflow:hidden}
+.hero-record{position:absolute;top:50%;left:50%;width:min(74%,600px);aspect-ratio:1;transform:translate(-42%,-50%);border-radius:50%;background:#111711}
+.hero-record::before{position:absolute;inset:9%;border:1px solid #536256;border-radius:50%;content:""}
+.hero-record::after{position:absolute;inset:43%;border-radius:50%;background:#a8f0ae;content:""}
+.hero-sleeve{position:relative;z-index:1;display:flex;width:min(70%,390px);aspect-ratio:1;flex-direction:column;justify-content:space-between;align-self:center;padding:clamp(20px,3vw,38px);background:#f3eedf;color:#101811;transform:rotate(-5deg);box-shadow:12px 13px 0 rgba(16,24,17,.13)}
+.hero-sleeve span,.hero-sleeve i{font-size:10px;font-weight:700;letter-spacing:1.4px;line-height:1.5}
+.hero-sleeve b{font:700 clamp(34px,5vw,68px)/.9 "Oswald","Arial Narrow",sans-serif;letter-spacing:-.045em}
+.hero-side-note{position:absolute;right:24px;bottom:30px;font-size:10px;font-weight:600;letter-spacing:.04em}
+.hero-split .hero-copy{align-items:flex-start;padding-left:clamp(32px,7vw,112px)}
+.hero-split .eyebrow{color:#263b2a;font-size:10px;letter-spacing:1.5px}
+.hero-split h1{max-width:620px;margin:24px 0;color:#101811;font-size:clamp(52px,7.3vw,96px);line-height:.98;letter-spacing:-.075em}
+.hero-split h1 em{color:#101811}
+.hero-split p{max-width:400px;color:#263b2a;font-size:16px;line-height:1.75}
+.hero-split .btn{display:flex;align-items:center;gap:28px;margin-top:34px;border:2px solid #101811;border-radius:999px;background:#101811;padding:13px 20px;color:#f3f7ed;font-size:13px;font-weight:700}
+.hero-split .btn:hover{background:transparent;color:#101811;filter:none}
+.hero-caption{display:block;margin-top:28px;color:#354b38;font-size:11px;letter-spacing:.02em}
+.walkthrough-section,.recent-section,.journal-intro{max-width:1080px;margin-right:auto;margin-left:auto;border:0}
+.walkthrough-section{padding:58px 0 84px}
+.walkthrough-intro{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:30px;margin-bottom:36px}
+.walkthrough-intro .eyebrow{grid-column:1/-1;color:var(--mint)}
+.walkthrough-intro h2{margin:0;color:var(--ink);font:600 clamp(38px,5.3vw,64px)/1.02 "DM Sans",system-ui,sans-serif;letter-spacing:-.06em}
+.walkthrough-intro h2 em{color:var(--mint);font-style:normal}
+.walkthrough-intro p{max-width:390px;margin:0 0 5px;color:var(--soft);font-size:14px;line-height:1.8}
+.walkthrough-layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(255px,.88fr);align-items:start;gap:24px}
+.walkthrough-featured{min-width:0}
+.walkthrough-featured .featured-placeholder{min-height:420px;justify-content:flex-end;border:0;border-radius:24px;background:var(--panel);padding:clamp(24px,4vw,42px)}
+.walkthrough-featured .featured-placeholder .eyebrow{color:var(--mint)}
+.walkthrough-featured .featured-placeholder h2{max-width:390px;font-size:clamp(26px,3vw,38px)}
+.walkthrough-featured .featured-placeholder p{max-width:370px;margin-bottom:0;line-height:1.7}
+.walkthrough-explainer{display:grid;gap:12px}
+.explain-card{min-height:122px;padding:18px 20px;border:0;border-radius:17px;background:var(--panel);transition:transform .35s ease,background .35s ease}
+.explain-card:hover{transform:translateY(-3px);background:color-mix(in srgb,var(--mint) 9%,var(--panel))}
+.explain-index{display:block;margin-bottom:10px;color:var(--mint);font-size:9px;font-weight:700;letter-spacing:1.15px}
+.explain-card h3{margin:0;color:var(--ink);font:600 15px/1.35 "DM Sans",system-ui,sans-serif;letter-spacing:-.015em;text-transform:none}
+.explain-card p{margin:6px 0 0;color:var(--soft);font-size:12px;line-height:1.6}
+.recent-section{padding:62px 0 72px;border:0}
+.section-heading{margin-bottom:22px}
+.reveal .walkthrough-featured,.reveal .walkthrough-intro,.reveal .explain-card{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.reveal.is-visible .walkthrough-intro{opacity:1;transform:translateY(0)}
+.reveal.is-visible .walkthrough-featured,.reveal.is-visible .explain-card{opacity:1;transform:translateY(0)}
+.reveal.is-visible .walkthrough-featured{transition-delay:.12s}
+.reveal.is-visible .explain-card:nth-child(1){transition-delay:.16s}
+.reveal.is-visible .explain-card:nth-child(2){transition-delay:.24s}
+.reveal.is-visible .explain-card:nth-child(3){transition-delay:.32s}
+.reveal.is-visible .explain-card:nth-child(4){transition-delay:.4s}
+.featured-card{border:0;border-radius:24px;background:var(--panel);padding:24px}
+.featured-top{padding:0 0 12px;border:0}
+.featured-top .eyebrow{color:var(--mint)}
+.featured-top small{font-size:11px;line-height:1.5}
+.chart-rank{border-radius:999px;background:color-mix(in srgb,var(--mint) 12%,var(--panel));padding:7px 10px;color:var(--mint);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+.featured-album{padding:12px 0 18px}
+.featured-album .cover{border:0;border-radius:15px}
+.featured-bottom{padding-top:15px;border:0}
+.featured-score span{color:var(--soft)}
+.featured-score strong{color:var(--mint);font-size:30px}
+.featured-track-list{padding:10px 0 6px;border:0}
+.featured-track-heading{padding:6px 0 10px;color:var(--soft)}
+.featured-track{grid-template-columns:24px minmax(0,1fr) auto;gap:10px;margin:0 0 6px;padding:9px 11px;border:0;border-radius:10px;background:color-mix(in srgb,var(--bg) 52%,var(--panel))}
+.featured-track-info{display:grid;min-width:0;gap:3px}
+.featured-track-name{font-size:12px;font-weight:600}
+.featured-track-note{overflow:hidden;color:var(--soft);font-size:10px;line-height:1.45;text-overflow:ellipsis}
+.featured-track-note::before{content:"NOTE · ";color:var(--mint);font-size:8px;font-weight:700;letter-spacing:.65px}
+.featured-track strong{color:var(--mint);font-size:13px}
+.featured-track-more{padding:6px 3px;color:var(--soft);font-size:10px}
+.featured-score span{letter-spacing:.8px}
+.featured-card .btn{border-radius:999px;padding:10px 16px}
+.recent-section .empty-note{border:0;border-radius:16px;background:var(--panel)}
+.recent-section .tile-notes,.recent-section .tile-note-empty{border:0}
+@media(max-width:760px){
+  .hero.hero-split{min-height:calc(100svh - 70px);grid-template-columns:1fr;margin-bottom:34px}
+  .hero-split .hero-visual{min-height:44svh;padding:22px}
+  .hero-record{width:min(65%,360px)}
+  .hero-sleeve{width:min(48%,260px);min-width:185px;padding:19px}
+  .hero-sleeve b{font-size:clamp(34px,9vw,54px)}
+  .hero-side-note{right:18px;bottom:15px}
+  .hero-split .hero-copy{padding:36px clamp(24px,8vw,58px) 44px}
+  .hero-split h1{margin:16px 0;font-size:clamp(50px,11vw,76px)}
+  .hero-split .btn{margin-top:24px}
+  .hero-caption{margin-top:18px}
+  .walkthrough-section{padding:38px 0 58px}
+  .walkthrough-intro{grid-template-columns:1fr;gap:12px;margin-bottom:24px}
+  .walkthrough-intro .eyebrow{grid-column:auto}
+  .walkthrough-intro p{max-width:480px}
+  .walkthrough-layout{grid-template-columns:1fr}
+  .walkthrough-featured .featured-placeholder{min-height:330px}
+  .walkthrough-explainer{grid-template-columns:1fr 1fr}
+  .explain-card{min-height:140px;padding:15px}
+  .recent-section{padding:44px 0 55px}
+}
+@media(max-width:480px){
+  .hero-split .hero-visual{min-height:40svh}
+  .hero-sleeve{width:54%;min-width:175px}
+  .hero-split .hero-copy{padding:30px 23px 38px}
+  .hero-split h1{font-size:clamp(47px,13vw,65px)}
+  .walkthrough-intro h2{font-size:42px}
+  .walkthrough-explainer{grid-template-columns:1fr}
+  .explain-card{min-height:0}
+  .featured-card{padding:17px}
+  .featured-album{grid-template-columns:94px minmax(0,1fr);gap:13px}
+  .featured-copy h2{font-size:21px}
+  .featured-bottom{align-items:flex-end}
+}
+@media(prefers-reduced-motion:reduce){.reveal .walkthrough-featured,.reveal .walkthrough-intro,.reveal .explain-card,.explain-card{transition:none!important;transform:none!important}.reveal:not(.is-visible) .walkthrough-featured,.reveal:not(.is-visible) .walkthrough-intro,.reveal:not(.is-visible) .explain-card{opacity:1}}
+</style>
 </head>
 <body>
 <button class="theme" id="theme" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">☼</span></button>
@@ -462,9 +570,8 @@ function home(ratingsOnly){
     else h+='<div class="empty-note"><span>NO RECORDS YET</span><strong>Your album ratings<br>will live here.</strong><button class="btn" id="emptyRate">Rate an album</button></div>';
     h+='</section>';
   }else{
-    h+='<section class="hero"><div class="hero-copy"><div class="eyebrow">A PERSONAL ALBUM RATING JOURNAL</div><h1>Albums, rated<br><em>your way.</em></h1><p>Find the records that stay with you. Rate every track, leave a private note, and build a collection that feels like yours.</p></div>';
-    h+='<aside class="featured" id="featured" aria-live="polite"><div class="featured-placeholder"><span class="eyebrow">POPULAR &amp; RECENT</span><p>Finding a current album worth hearing…</p></div></aside></section>';
-  h+='<section class="journal-intro reveal"><div class="eyebrow">YOUR LISTENING, IN YOUR WORDS</div><h2>A score is only<br><em>part of the story.</em></h2><p>Rate an album track by track and add a note to the moments you want to remember. Keep every rating together in your own music journal.</p><button class="btn" id="rateAlbums">Rate albums</button></section>';
+    h+='<section class="hero hero-split"><div class="hero-visual" aria-hidden="true"><div class="hero-record"></div><div class="hero-sleeve"><span>LISTEN<br>WITH INTENTION</span><b>YOUR<br>SOUNDTRACK</b><i>PLAY · RATE · REMEMBER</i></div><span class="hero-side-note">A music journal, made personal</span></div><div class="hero-copy"><div class="eyebrow">LISTEN · RATE · REMEMBER</div><h1>Albums, rated<br><em>your way.</em></h1><p>Give every track a score. Keep the details and small moments you want to remember.</p><button class="btn" id="rateAlbums">Rate albums <span aria-hidden="true">↗</span></button><span class="hero-caption">Your music. Your words. Your way of hearing it.</span></div></section>';
+    h+='<section class="walkthrough-section reveal" aria-labelledby="walkthroughTitle"><div class="walkthrough-intro"><div class="eyebrow">A CLOSER LISTEN</div><h2 id="walkthroughTitle">Every score<br>has a <em>story.</em></h2><p>Keep your album average, track scores, and personal notes together in one place.</p></div><div class="walkthrough-layout"><div class="featured walkthrough-featured" id="featured" aria-live="polite"><div class="featured-placeholder"><span class="eyebrow">YOUR FEATURED ALBUM</span><h2>Your chosen album will live here.</h2><p>Artwork, your track-by-track scores, personal notes, and album average will appear together.</p></div></div><div class="walkthrough-explainer" aria-label="What you see in an album rating"><article class="explain-card"><span class="explain-index">01 · TRACK SCORES</span><h3>Your score for every song</h3><p>Each number belongs to one track, so the highs and skips are easy to spot.</p></article><article class="explain-card"><span class="explain-index">02 · YOUR NOTES</span><h3>Keep the detail behind it</h3><p>Add a private note to a track: a lyric, a memory, or what made it click.</p></article><article class="explain-card"><span class="explain-index">03 · ALBUM AVERAGE</span><h3>One score for the full record</h3><p>The average is calculated from the tracks you rated.</p></article><article class="explain-card"><span class="explain-index">04 · COVER ART</span><h3>See the album at a glance</h3><p>Artwork keeps each entry connected to the record you listened to.</p></article></div></div></section>';
     h+='<section class="recent-section reveal"><div class="section-heading"><div><div class="eyebrow">FROM YOUR JOURNAL</div><h2>Recently rated</h2></div><button class="text-link" id="allRatings">View all ratings <span>→</span></button></div>';
     if(mine.length)h+='<div class="grid">'+mine.slice(0,6).map(albumTile).join("")+'</div>';
     else h+='<div class="empty-note"><span>NO RECORDS YET</span><strong>Your first album rating starts here.</strong><button class="btn" id="emptyRate">Rate an album</button></div>';
@@ -476,7 +583,7 @@ function home(ratingsOnly){
   var all=$("#allRatings");if(all)all.onclick=function(){location.hash="#ratings"};
   if(!ratingsOnly)loadFeaturedAlbum().then(function(album){
     var box=$("#featured");if(!box)return;
-    if(!album){box.innerHTML='<div class="featured-placeholder"><span class="eyebrow">FEATURED ALBUM</span><h2>Pick a record worth replaying.</h2><p>Current chart picks could not load. Open Rate albums to find something for your journal.</p><button class="btn ghost" id="featureSearch">Find an album</button></div>';var go=$("#featureSearch");if(go)go.onclick=function(){location.hash="#rate"};return}
+    if(!album){return}
     box.innerHTML=popularCard(album);
     box.querySelectorAll("[data-feature-id]").forEach(function(b){b.onclick=function(){albumReturnHash="";location.hash="#a="+b.dataset.featureId}});
   });
@@ -527,7 +634,7 @@ function loadPopularAlbum(){
 /* Owner-controlled featured selection. Update this record to change the homepage pick. */
 var OWNER_FEATURED_PICK=null;
 function loadFeaturedAlbum(){
-  if(!OWNER_FEATURED_PICK)return loadPopularAlbum();
+  if(!OWNER_FEATURED_PICK)return Promise.resolve(null);
   var pick=OWNER_FEATURED_PICK;
   var match=pick.id?Promise.resolve({id:pick.id}):dzFind(pick.title,pick.artist);
   return match.then(function(hit){
@@ -539,10 +646,10 @@ function loadFeaturedAlbum(){
         title:pick.title||detail.title,
         artist:{name:pick.artist||(detail.artist&&detail.artist.name)||""},
         release_date:pick.release_date||detail.release_date||"",
-        cover_medium:detail.cover_medium||detail.cover_big||"",
-        cover_big:detail.cover_big||detail.cover_medium||"",
+        cover_medium:pick.cover||detail.cover_medium||detail.cover_big||"",
+        cover_big:pick.cover||detail.cover_big||detail.cover_medium||"",
         editorRating:pick.rating,
-        editorTracks:(pick.tracks||[]).map(function(t){return{name:t.name,score:+t.score}}),
+        editorTracks:(pick.tracks||[]).map(function(t){return{name:t.name,score:t.score==null?null:+t.score,note:t.note||""}}),
         curatorPick:true
       };
     });
@@ -551,19 +658,18 @@ function loadFeaturedAlbum(){
 function featuredTrackList(album,saved){
   var tracks=(album.editorTracks&&album.editorTracks.length?album.editorTracks:(saved?saved.tracks.filter(function(t){return t.r!=null}).map(function(t){return{name:t.name,score:t.r}}):[]));
   if(!tracks.length)return"";
-  return'<div class="featured-track-list"><div class="featured-track-heading">TRACK RATINGS</div>'+tracks.slice(0,6).map(function(t,i){
+  return'<div class="featured-track-list"><div class="featured-track-heading">YOUR TRACK RATINGS &amp; NOTES</div>'+tracks.slice(0,6).map(function(t,i){
     var score=t.score==null?t.r:t.score;
-    return'<div class="featured-track"><span class="featured-track-number">'+String(i+1).padStart(2,"0")+'</span><span class="featured-track-name">'+esc(t.name)+'</span><strong>'+((score==null||!Number.isFinite(+score))?"—":(+score).toFixed(1))+'</strong></div>';
+    return'<div class="featured-track"><span class="featured-track-number">'+String(i+1).padStart(2,"0")+'</span><span class="featured-track-info"><span class="featured-track-name">'+esc(t.name)+'</span>'+(t.note?'<span class="featured-track-note">'+esc(t.note)+'</span>':'')+'</span><strong>'+((score==null||!Number.isFinite(+score))?"—":(+score).toFixed(1))+'</strong></div>';
   }).join("")+(tracks.length>6?'<div class="featured-track-more">+'+(tracks.length-6)+' more tracks</div>':"")+'</div>';
 }
 function popularCard(album){
-  var saved=matchingRatedAlbum(album),ownerScore=album.editorRating==null?null:+album.editorRating,score=ownerScore!=null?ownerScore:(saved?avg(saved):null),curated=!!album.curatorPick;
+  var curated=!!album.curatorPick,saved=curated?null:matchingRatedAlbum(album),trackScores=(album.editorTracks||[]).map(function(t){return t.score}).filter(function(n){return n!=null&&Number.isFinite(+n)}),trackAverage=trackScores.length?trackScores.reduce(function(s,n){return s+(+n)},0)/trackScores.length:null,ownerScore=album.editorRating==null?trackAverage:+album.editorRating,score=ownerScore!=null?ownerScore:(saved?avg(saved):null);
   var id=saved?saved.id:String(album.id),artist=(album.artist&&album.artist.name)||"",year=(album.release_date||"").slice(0,4);
-  var cutoff=new Date();cutoff.setMonth(cutoff.getMonth()-24);
-  var releaseLabel=curated?"CURATOR'S PICK":(album.release_date&&new Date(album.release_date)>=cutoff?"RECENT RELEASE":"POPULAR RELEASE");
+  var releaseLabel=curated?"HANDPICKED ALBUM":"FEATURED ALBUM";
   var item={id:id,title:album.title,artist:artist,cover:(saved&&saved.cover)||album.cover_medium||album.cover_big||""};
   var trackList=featuredTrackList(album,saved);
-  return '<div class="featured-card"><div class="featured-top"><div><span class="eyebrow">'+(curated?"CURATOR’S PICK":"POPULAR &amp; RECENT")+'</span><small>'+(curated?"Chosen for the journal":"From the current album chart")+'</small></div><span class="chart-rank">'+(curated?"Personal pick":"Chart pick")+'</span></div><button class="featured-album" data-feature-id="'+esc(id)+'">'+cover(item)+'<div class="featured-copy"><span class="release-label">'+releaseLabel+(year?' · '+esc(year):'')+'</span><h2>'+esc(album.title)+'</h2><p>'+esc(artist)+'</p></div></button>'+trackList+'<div class="featured-bottom"><div class="featured-score"><span>'+(ownerScore!=null?"CURATOR SCORE":"YOUR RATING")+'</span><strong>'+(score==null?'—':score.toFixed(1))+'</strong><small>'+(score==null?'Not rated yet':'out of 10')+'</small></div><button class="btn" data-feature-id="'+esc(id)+'">'+(score==null?'Rate this album':'Open rating')+'</button></div></div>';
+  return '<div class="featured-card"><div class="featured-top"><div><span class="eyebrow">'+(curated?"HANDPICKED":"YOUR FEATURED ALBUM")+'</span><small>'+(curated?"Chosen and rated by the owner":"A closer look at an album")+'</small></div><span class="chart-rank">'+(curated?"OWNER’S PICK":"ALBUM")+'</span></div><button class="featured-album" data-feature-id="'+esc(id)+'">'+cover(item)+'<div class="featured-copy"><span class="release-label">'+releaseLabel+(year?' · '+esc(year):'')+'</span><h2>'+esc(album.title)+'</h2><p>'+esc(artist)+'</p></div></button>'+trackList+'<div class="featured-bottom"><div class="featured-score"><span>ALBUM AVERAGE</span><strong>'+(score==null?'—':score.toFixed(1))+'</strong><small>'+(score==null?'out of 10':'out of 10 · from your track scores')+'</small></div><button class="btn" data-feature-id="'+esc(id)+'">Open rating <span aria-hidden="true">↗</span></button></div></div>';
 }
 
 async function mbSearch(words){
