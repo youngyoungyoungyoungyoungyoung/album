@@ -34,7 +34,7 @@ The current direction is an album journal with black-and-green dark colors, a so
 
 The featured card uses owner-maintained OWNER_FEATURED_PICK data: album ID or title and artist, optional cover URL, album average, and tracks containing name, score, and optional note. The current pick is “BAD ASS F*CKING KID” by Nettspend. The screenshot supplied the 15 track scores and 7.8 average. The “LAUGHIN” note is “Great beat but the flow was not it.” Update the owner setting and publish to change the public feature; the site is static, so a public on-page editor cannot publish changes for everyone. Notes added to this public featured card are visible to visitors. Sign in is a placeholder for now; real accounts are a later feature.
 
-The homepage no longer falls back to an automatically chosen chart album. Its listener photo is supplied by the owner, has a transparent background, and is embedded in `index.html`.
+The homepage no longer falls back to an automatically chosen chart album. The left side of the welcome is a crisp, CSS-built listening journal card using the owner’s current album title, average, track scores, and note.
 
 ## How it is built
 
@@ -54,7 +54,7 @@ The homepage no longer falls back to an automatically chosen chart album. Its li
 - **Direct score entry:** make the large score at the top of the rating dialog itself editable from 0 to 10 in one-tenth steps, alongside the slider, with no separate score box; keep the optional track note field full-width.
 - **Featured notes:** support optional public per-track notes and calculate the album average from the supplied scores when no explicit average is set.
 - **Theme and navigation:** move the light/dark switch into the top menu and apply both palettes to the whole page; hide the browser scrollbars while keeping scrolling enabled.
-- **Homepage listener photo:** use the owner-supplied image with its background removed; enlarge the cutout on the welcome panel and embed it in the single-file page.
+- **Homepage visual:** replace the low-resolution cropped listener photo with a sharp, responsive editorial scorecard built in HTML/CSS from the current owner-picked album and track notes.
 - **Shared ratings:** ask for a username when creating a share link if none is saved, and label shared scores as listener ratings rather than official scores.
 - **Header and score colors:** keep the full menu and theme switch together at the top of every page, then let them scroll away; distinguish best tracks in lime, worst and very low scores in red, and keep ordinary and unrated tracks neutral. Color the album average by its actual score on a red-to-amber-to-green scale. Align homepage explainer copy and recently rated covers.
 - **Centered journal intro:** this was the previous layout; the scroll walkthrough replaces it.
