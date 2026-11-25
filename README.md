@@ -32,7 +32,7 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 
 The current direction is an album journal with black-and-green dark colors, a soft green-tinted light theme, and a vivid mint welcome panel. Keep both themes, with no background dots, gradients, glow, or thin divider lines between homepage sections. The first screen contains only horizontal navigation and a split-screen welcome with the exact headline “Albums, rated your way.” Scrolling reveals the owner’s featured album card, all track scores, supplied notes, and album average beside short explanations. The owner pick is labeled “Handpicked” / “Owner’s pick.” Follow with recently rated albums. Album search and shared-rating name entry live on the Rate page; stats live on My ratings. The header stays fixed with the theme switch and navigation together.
 
-The featured card uses owner-maintained OWNER_FEATURED_PICK data: album ID or title and artist, optional cover URL, album average, and tracks containing name, score, and optional note. The current pick is “BAD ASS F*CKING KID” by Nettspend. The screenshot supplied the 15 track scores and 7.8 average; the text of the note marked on “LAUGHIN” has not been supplied yet. Do not invent that note. Update the owner setting and publish to change the public feature; the site is static, so a public on-page editor cannot publish changes for everyone. Any note added to this public featured card is visible to visitors. Sign in is a placeholder for now; real accounts are a later feature.
+The featured card uses owner-maintained OWNER_FEATURED_PICK data: album ID or title and artist, optional cover URL, album average, and tracks containing name, score, and optional note. The current pick is “BAD ASS F*CKING KID” by Nettspend. The screenshot supplied the 15 track scores and 7.8 average. The “LAUGHIN” note is “Great beat but the flow was not it.” Update the owner setting and publish to change the public feature; the site is static, so a public on-page editor cannot publish changes for everyone. Notes added to this public featured card are visible to visitors. Sign in is a placeholder for now; real accounts are a later feature.
 
 The homepage no longer falls back to an automatically chosen chart album. Its listener photo is from [Amari Shutters on Unsplash](https://unsplash.com/photos/young-woman-with-headphones-listening-to-music-A6kViIz3cdQ) and is free to use under the Unsplash License.
 
@@ -69,12 +69,11 @@ Relevant commits:
 
 ## Next session
 
-1. Add the missing note text for “LAUGHIN” to `OWNER_FEATURED_PICK` if it should appear in the public card.
-2. Check the newest **Actions → Pages build and deployment** run on `main`, then open the live site and confirm it loads.
-3. Review the desktop and mobile split-screen welcome, scroll reveal, Rate page, My ratings stats, and dark/light themes.
-4. Confirm the owner-picked card shows its cover, track scores and notes, and album average.
-5. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
-6. Rate a track, add a note, and confirm it appears on recent album cards and remains private in shared links.
+1. Check the newest **Actions → Pages build and deployment** run on `main` after the latest commit.
+2. Review the desktop and mobile split-screen welcome, repeatable scroll reveal, Rate page, My ratings stats, and dark/light themes.
+3. Confirm the owner-picked card shows its cover, all 15 track scores, the “LAUGHIN” note, and 7.8 average.
+4. Try an artist search such as “Yeat”; confirm popular Yeat albums appear first and singles are absent while EPs remain eligible.
+5. Rate a track, add a note, and confirm it appears on recent album cards and remains private in shared links.
 
 Start by reading this README and `index.html`, then continue from the checklist above.
 
