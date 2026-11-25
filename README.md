@@ -56,7 +56,7 @@ The homepage no longer falls back to an automatically chosen chart album. Its li
 - **Theme and navigation:** move the light/dark switch into the sticky menu and apply both palettes to the whole page; hide the browser scrollbars while keeping scrolling enabled.
 - **Homepage listener photo:** use the owner-supplied image with its background removed; enlarge the cutout on the welcome panel and embed it in the single-file page.
 - **Shared ratings:** ask for a username when creating a share link if none is saved, and label shared scores as listener ratings rather than official scores.
-- **Header and score colors:** keep the full menu and theme switch pinned together on every page; distinguish best tracks in lime, worst and very low scores in red, and keep other track scores neutral. Align homepage explainer copy and recently rated covers.
+- **Header and score colors:** keep the full menu and theme switch pinned together on every page; distinguish best tracks in lime, worst and very low scores in red, and keep ordinary and unrated tracks neutral. Color the album average by its actual score on a red-to-amber-to-green scale. Align homepage explainer copy and recently rated covers.
 - **Centered journal intro:** this was the previous layout; the scroll walkthrough replaces it.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
