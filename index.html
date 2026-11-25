@@ -446,9 +446,35 @@ dialog{border-radius:18px;padding:25px;background:var(--panel)}
 }
 @media(prefers-reduced-motion:reduce){.reveal .walkthrough-featured,.reveal .walkthrough-intro,.reveal .explain-card,.explain-card{transition:none!important;transform:none!important}.reveal:not(.is-visible) .walkthrough-featured,.reveal:not(.is-visible) .walkthrough-intro,.reveal:not(.is-visible) .explain-card{opacity:1}}
 </style>
+<style>
+/* Keep the theme switch with the sticky navigation, and apply the palette to the whole page. */
+:root{--hero:#a8f0ae;--hero-ink:#101811;--hero-muted:#263b2a;--photo-tint:rgba(117,222,132,.38)}
+:root[data-theme="light"]{--hero:#edf7e8;--hero-ink:#1c2a1f;--hero-muted:#617366;--photo-tint:rgba(213,239,205,.35)}
+html,body{max-width:100%;overflow-x:clip;scrollbar-width:none;-ms-overflow-style:none}
+#app,.shell,.main{max-width:100%;scrollbar-width:none;-ms-overflow-style:none}
+*,*::before,*::after{scrollbar-width:none;-ms-overflow-style:none}
+*::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg)}
+.header-actions{gap:9px}
+.theme{position:static;top:auto;right:auto;z-index:auto;width:40px;height:40px;display:grid;place-items:center;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--mint)}
+.theme:hover{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 10%,var(--panel))}
+.hero.hero-split{background:var(--hero);color:var(--hero-ink)}
+.hero-split .hero-visual,.hero-split .hero-copy{background:var(--hero);color:var(--hero-ink)}
+.hero-split .hero-visual{position:relative;isolation:isolate;display:block;padding:0}
+.hero-listener{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 43%;filter:saturate(.86) contrast(.96)}
+.hero-photo-tint{position:absolute;inset:0;background:var(--photo-tint);mix-blend-mode:multiply;pointer-events:none}
+.hero-split .eyebrow,.hero-split p,.hero-caption{color:var(--hero-muted)}
+.hero-split h1,.hero-split h1 em{color:var(--hero-ink)}
+.hero-split .btn{border-color:var(--hero-ink);background:var(--hero-ink);color:var(--hero)}
+.hero-split .btn:hover{background:transparent;color:var(--hero-ink)}
+.hero-side-note,.hero-sleeve,.hero-record,.hero-caption{display:none!important}
+.head .by{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.by-disclaimer{color:var(--soft);font-size:10px;font-weight:500;letter-spacing:0;text-transform:none}
+@media(max-width:760px){.topbar{position:sticky;top:0;z-index:50}.hero-split .hero-visual{display:block;min-height:44svh;padding:0}.hero-listener{object-position:center 42%}}
+@media(max-width:480px){.hero-split .hero-visual{min-height:40svh}}
+</style>
 </head>
 <body>
-<button class="theme" id="theme" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">☼</span></button>
 <div class="wrap" id="app"></div>
 <dialog id="dlg"></dialog>
 
@@ -519,7 +545,7 @@ async function mbTracks(id){
 function enc(o){var b=new TextEncoder().encode(JSON.stringify(o)),s="";b.forEach(function(c){s+=String.fromCharCode(c)});return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 function dec(s){s=s.replace(/-/g,"+").replace(/_/g,"/");var b=atob(s),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return JSON.parse(new TextDecoder().decode(u))}
 function shareLink(a){
-  if(!store.nick){var n=prompt("Choose a nickname for your rating:");if(!n)return;store.nick=n.trim().slice(0,24);save()}
+  if(!store.nick){var n=prompt("Choose a username to show on your shared rating:");if(!n||!n.trim())return;store.nick=n.trim().slice(0,24);save()}
   var p={n:store.nick,i:a.id,t:a.title,a:a.artist,y:a.year,c:a.cover||"",k:a.tracks.map(function(t){return t.name}),r:a.tracks.map(function(t){return t.r})};
   var link=location.href.split("#")[0]+"#s="+enc(p),title=a.title+" – rated by @"+store.nick;
   if(navigator.share){navigator.share({title:title,url:link}).catch(function(){})}
@@ -530,7 +556,7 @@ function shareLink(a){
 /* ---------- home + search ---------- */
 var timer=null,seq=0,albumReturnHash="";
 function shell(content,active){
-  return '<div class="shell"><main class="main"><header class="topbar"><button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav">Menu</button><nav class="nav" id="mobileNav" aria-label="Main navigation"><button data-nav="discover" class="'+(active==="discover"?"active":"")+'">Discover</button><button data-nav="ratings" class="'+(active==="ratings"?"active":"")+'">My ratings</button><button data-nav="versus" class="'+(active==="versus"?"active":"")+'">Album vs album</button></nav><div class="header-actions"><button class="sign-in" data-nav="signin">Sign in</button></div></header><div class="page-content">'+content+'</div></main></div>';
+  return '<div class="shell"><main class="main"><header class="topbar"><button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav">Menu</button><nav class="nav" id="mobileNav" aria-label="Main navigation"><button data-nav="discover" class="'+(active==="discover"?"active":"")+'">Discover</button><button data-nav="ratings" class="'+(active==="ratings"?"active":"")+'">My ratings</button><button data-nav="versus" class="'+(active==="versus"?"active":"")+'">Album vs album</button></nav><div class="header-actions"><button class="sign-in" data-nav="signin">Sign in</button><button class="theme" id="theme" aria-label="Switch theme"><span class="theme-icon" aria-hidden="true">☼</span></button></div></header><div class="page-content">'+content+'</div></main></div>';
 }
 function bindMenu(){
   app.querySelectorAll("[data-nav]").forEach(function(b){b.onclick=function(){
@@ -543,11 +569,13 @@ function bindMenu(){
   }});
   var toggle=$("#menuToggle"),nav=$("#mobileNav");
   if(toggle&&nav)toggle.onclick=function(){var open=nav.classList.toggle("open");toggle.setAttribute("aria-expanded",String(open));toggle.textContent=open?"Close":"Menu"};
+  var theme=$("#theme");
+  if(theme){syncThemeButton();theme.onclick=function(){var t=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=t;try{localStorage.setItem("theme",t)}catch(e){}syncThemeButton()}}
 }
 function setupReveals(){
   var nodes=app.querySelectorAll(".reveal");
   if(!("IntersectionObserver" in window)){nodes.forEach(function(n){n.classList.add("is-visible")});return}
-  var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add("is-visible");io.unobserve(e.target)}})},{threshold:.12,rootMargin:"0px 0px -36px 0px"});
+  var io=new IntersectionObserver(function(entries){entries.forEach(function(e){e.target.classList.toggle("is-visible",e.isIntersecting)})},{threshold:.12,rootMargin:"0px 0px -36px 0px"});
   nodes.forEach(function(n){io.observe(n)});
 }
 function albumTile(a){
@@ -570,8 +598,8 @@ function home(ratingsOnly){
     else h+='<div class="empty-note"><span>NO RECORDS YET</span><strong>Your album ratings<br>will live here.</strong><button class="btn" id="emptyRate">Rate an album</button></div>';
     h+='</section>';
   }else{
-    h+='<section class="hero hero-split"><div class="hero-visual" aria-hidden="true"><div class="hero-record"></div><div class="hero-sleeve"><span>LISTEN<br>WITH INTENTION</span><b>YOUR<br>SOUNDTRACK</b><i>PLAY · RATE · REMEMBER</i></div><span class="hero-side-note">A music journal, made personal</span></div><div class="hero-copy"><div class="eyebrow">LISTEN · RATE · REMEMBER</div><h1>Albums, rated<br><em>your way.</em></h1><p>Give every track a score. Keep the details and small moments you want to remember.</p><button class="btn" id="rateAlbums">Rate albums <span aria-hidden="true">↗</span></button><span class="hero-caption">Your music. Your words. Your way of hearing it.</span></div></section>';
-    h+='<section class="walkthrough-section reveal" aria-labelledby="walkthroughTitle"><div class="walkthrough-intro"><div class="eyebrow">A CLOSER LISTEN</div><h2 id="walkthroughTitle">Every score<br>has a <em>story.</em></h2><p>Keep your album average, track scores, and personal notes together in one place.</p></div><div class="walkthrough-layout"><div class="featured walkthrough-featured" id="featured" aria-live="polite"><div class="featured-placeholder"><span class="eyebrow">YOUR FEATURED ALBUM</span><h2>Your chosen album will live here.</h2><p>Artwork, your track-by-track scores, personal notes, and album average will appear together.</p></div></div><div class="walkthrough-explainer" aria-label="What you see in an album rating"><article class="explain-card"><span class="explain-index">01 · TRACK SCORES</span><h3>Your score for every song</h3><p>Each number belongs to one track, so the highs and skips are easy to spot.</p></article><article class="explain-card"><span class="explain-index">02 · YOUR NOTES</span><h3>Keep the detail behind it</h3><p>Add a private note to a track: a lyric, a memory, or what made it click.</p></article><article class="explain-card"><span class="explain-index">03 · ALBUM AVERAGE</span><h3>One score for the full record</h3><p>The average is calculated from the tracks you rated.</p></article><article class="explain-card"><span class="explain-index">04 · COVER ART</span><h3>See the album at a glance</h3><p>Artwork keeps each entry connected to the record you listened to.</p></article></div></div></section>';
+    h+='<section class="hero hero-split"><div class="hero-visual"><img class="hero-listener" src="https://images.unsplash.com/photo-1759591735835-4c700901344d?auto=format&amp;fit=crop&amp;fm=jpg&amp;q=85&amp;w=1800" alt="A woman enjoying music through headphones" fetchpriority="high"><span class="hero-photo-tint" aria-hidden="true"></span></div><div class="hero-copy"><div class="eyebrow">LISTEN · RATE · REMEMBER</div><h1>Albums, rated<br><em>your way.</em></h1><p>Give every track a score. Keep the details and small moments you want to remember.</p><button class="btn" id="rateAlbums">Rate albums <span aria-hidden="true">↗</span></button></div></section>';
+     h+='<section class="walkthrough-section reveal" aria-labelledby="walkthroughTitle"><div class="walkthrough-intro"><div class="eyebrow">A CLOSER LISTEN</div><h2 id="walkthroughTitle">Every score<br>has a <em>story.</em></h2><p>Keep your album average, track scores, and personal notes together in one place.</p></div><div class="walkthrough-layout"><div class="featured walkthrough-featured" id="featured" aria-live="polite"><div class="featured-placeholder"><span class="eyebrow">YOUR FEATURED ALBUM</span><h2>Your chosen album will live here.</h2><p>Artwork, your track-by-track scores, personal notes, and album average will appear together.</p></div></div><div class="walkthrough-explainer" aria-label="What you see in an album rating"><article class="explain-card"><span class="explain-index">01 · TRACK SCORES</span><h3>Your score for every song</h3><p>Each number belongs to one track, so the highs and skips are easy to spot.</p></article><article class="explain-card"><span class="explain-index">02 · YOUR NOTES</span><h3>Keep the detail behind it</h3><p>A track note can hold a lyric, a memory, or the detail behind your score.</p></article><article class="explain-card"><span class="explain-index">03 · ALBUM AVERAGE</span><h3>One score for the full record</h3><p>The average is calculated from the tracks you rated.</p></article><article class="explain-card"><span class="explain-index">04 · COVER ART</span><h3>See the album at a glance</h3><p>Artwork keeps each entry connected to the record you listened to.</p></article></div></div></section>';
     h+='<section class="recent-section reveal"><div class="section-heading"><div><div class="eyebrow">FROM YOUR JOURNAL</div><h2>Recently rated</h2></div><button class="text-link" id="allRatings">View all ratings <span>→</span></button></div>';
     if(mine.length)h+='<div class="grid">'+mine.slice(0,6).map(albumTile).join("")+'</div>';
     else h+='<div class="empty-note"><span>NO RECORDS YET</span><strong>Your first album rating starts here.</strong><button class="btn" id="emptyRate">Rate an album</button></div>';
@@ -631,8 +659,12 @@ function loadPopularAlbum(){
   }).catch(function(){popularAlbumPromise=null;return null});
   return popularAlbumPromise;
 }
-/* Owner-controlled featured selection. Update this record to change the homepage pick. */
-var OWNER_FEATURED_PICK=null;
+/* Owner-controlled featured selection. The source image supplies these public scores. */
+var OWNER_FEATURED_PICK={id:"680158261",title:"BAD ASS F*CKING KID",artist:"Nettspend",release_date:"2024",rating:7.8,tracks:[
+  {name:"Growing Up",score:8.8},{name:"Leader",score:9.2},{name:"Project Pat",score:8.4},{name:"Tommy",score:7.9},{name:"Tyla",score:7.1},
+  {name:"A$AP",score:5.0},{name:"F*CK CANCER",score:8.7},{name:"Skipping Class",score:9.3},{name:"Beach leak",score:9.4},{name:"Shut Up",score:9.4},
+  {name:"Birdbox",score:7.2},{name:"Drop The Blunt",score:6.3},{name:"Perc Soda",score:7.6},{name:"LAUGHIN",score:6.8},{name:"Say Please",score:5.8}
+]};
 function loadFeaturedAlbum(){
   if(!OWNER_FEATURED_PICK)return Promise.resolve(null);
   var pick=OWNER_FEATURED_PICK;
@@ -658,10 +690,10 @@ function loadFeaturedAlbum(){
 function featuredTrackList(album,saved){
   var tracks=(album.editorTracks&&album.editorTracks.length?album.editorTracks:(saved?saved.tracks.filter(function(t){return t.r!=null}).map(function(t){return{name:t.name,score:t.r}}):[]));
   if(!tracks.length)return"";
-  return'<div class="featured-track-list"><div class="featured-track-heading">YOUR TRACK RATINGS &amp; NOTES</div>'+tracks.slice(0,6).map(function(t,i){
+  return'<div class="featured-track-list"><div class="featured-track-heading">YOUR TRACK RATINGS &amp; NOTES</div>'+tracks.map(function(t,i){
     var score=t.score==null?t.r:t.score;
     return'<div class="featured-track"><span class="featured-track-number">'+String(i+1).padStart(2,"0")+'</span><span class="featured-track-info"><span class="featured-track-name">'+esc(t.name)+'</span>'+(t.note?'<span class="featured-track-note">'+esc(t.note)+'</span>':'')+'</span><strong>'+((score==null||!Number.isFinite(+score))?"—":(+score).toFixed(1))+'</strong></div>';
-  }).join("")+(tracks.length>6?'<div class="featured-track-more">+'+(tracks.length-6)+' more tracks</div>':"")+'</div>';
+  }).join("")+'</div>';
 }
 function popularCard(album){
   var curated=!!album.curatorPick,saved=curated?null:matchingRatedAlbum(album),trackScores=(album.editorTracks||[]).map(function(t){return t.score}).filter(function(n){return n!=null&&Number.isFinite(+n)}),trackAverage=trackScores.length?trackScores.reduce(function(s,n){return s+(+n)},0)/trackScores.length:null,ownerScore=album.editorRating==null?trackAverage:+album.editorRating,score=ownerScore!=null?ownerScore:(saved?avg(saved):null);
@@ -853,7 +885,7 @@ function ring(m){
 function page(a,ro,by){
   cur=a;var m=avg(a),n=a.tracks.filter(function(t){return t.r!=null}).length;
   var h='<button class="btn ghost" id="bk" style="margin-bottom:12px">← Back</button>';
-  h+='<div class="head">'+cover(a)+'<div class="info"><h2>'+esc(a.title)+'</h2><div class="a">'+esc(a.artist)+(a.year?" · "+esc(a.year):"")+'</div>'+(by?'<div class="by">Rated by @'+esc(by)+'</div>':'<div class="cnt">'+n+" / "+a.tracks.length+' tracks rated</div>')+'</div>'+ring(m)+'</div>';
+  h+='<div class="head">'+cover(a)+'<div class="info"><h2>'+esc(a.title)+'</h2><div class="a">'+esc(a.artist)+(a.year?" · "+esc(a.year):"")+'</div>'+(by?'<div class="by">Rated by @'+esc(by)+'<small class="by-disclaimer">Listener rating · not an official score</small></div>':'<div class="cnt">'+n+" / "+a.tracks.length+' tracks rated</div>')+'</div>'+ring(m)+'</div>';
   var R=roles(a);
   h+='<div class="tracks">'+a.tracks.map(function(t,i){return trk(a,i,R)}).join("")+'</div>';
   h+='<div class="row">'+(ro?'<button class="btn" id="mine">Rate this album too</button>':(store.mine[a.id]?'<button class="btn ghost" id="del">Delete</button>':'')+'<button class="btn ghost" id="vsa">Album vs album</button><button class="btn" id="share">Share link</button>')+'</div>';
@@ -957,16 +989,10 @@ function route(){
 }
 function syncThemeButton(){
   var dark=document.documentElement.dataset.theme==="dark",button=$("#theme");
+  if(!button)return;
   button.querySelector(".theme-icon").textContent=dark?"☼":"☾";
   button.setAttribute("aria-label",dark?"Switch to light mode":"Switch to dark mode");
 }
-syncThemeButton();
-$("#theme").onclick=function(){
-  var t=document.documentElement.dataset.theme==="dark"?"light":"dark";
-  document.documentElement.dataset.theme=t;
-  try{localStorage.setItem("theme",t)}catch(e){}
-  syncThemeButton();
-};
 addEventListener("hashchange",route);
 route();
 </script>
