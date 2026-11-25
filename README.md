@@ -12,7 +12,7 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 - Search for real albums and EPs, then rate tracks from 0 to 10.
 - Calculate an album score as the average of tracks that have ratings.
 - Add an optional private note to each track (up to 300 characters).
-- Compare two albums, mark the best and lowest rated tracks, and share a read-only rating link.
+- Compare up to three albums, mark the best and lowest rated tracks, share a read-only comparison link, and save comparisons to My ratings in this browser.
 - Use the site in English, with dark and light themes.
 
 ## Search behavior
@@ -25,6 +25,7 @@ A lightweight, single-page album rating site hosted with GitHub Pages.
 ## Ratings and notes
 
 - Ratings and notes are saved in this browser's local storage under `rate2`; there is no account or server database.
+- Saved album comparisons are stored locally in this browser and appear on **My ratings**. A comparison link includes the selected albums and their personal track scores; it is read-only for visitors and labels scores as listener ratings, not official scores.
 - Notes belong to individual tracks, are optional, and are not included in shared links. Notes added to the public homepage feature are visible to visitors.
 - Shared links contain the album and rating data needed for a read-only view. A visitor can copy the album into their own list to rate it.
 
@@ -41,7 +42,7 @@ The homepage no longer falls back to an automatically chosen chart album. The le
 - One vanilla HTML/CSS/JavaScript file; no build step or framework.
 - MusicBrainz is queried with `fetch`. Deezer is accessed through JSONP because of browser cross-origin restrictions.
 - Cover Art Archive is a fallback for MusicBrainz artwork.
-- Hash routes include album view (`#a=...`), shared view (`#s=...`), album comparison (`#v=...`), and the ratings list (`#ratings`).
+- Hash routes include album view (`#a=...`), shared rating view (`#s=...`), editable album comparison (`#v=...`), shared comparison (`#c=...`), and the ratings list (`#ratings`).
 
 ## Recent changes
 
@@ -58,6 +59,7 @@ The homepage no longer falls back to an automatically chosen chart album. The le
 - **Shared ratings:** ask for a username when creating a share link if none is saved, and label shared scores as listener ratings rather than official scores.
 - **Header and score colors:** keep the full menu and theme switch together at the top of every page, then let them scroll away; distinguish best tracks in lime, worst and very low scores in red, and keep ordinary and unrated tracks neutral. Color the album average by its actual score on a red-to-amber-to-green scale. Align homepage explainer copy and recently rated covers.
 - **Album vs album winner:** frame the winning album and place a tilted crown emoji over the cover, without adding a label that shifts the comparison layout.
+- **Album comparisons:** compare up to three albums, rate tracks directly with the next-track flow, share a read-only comparison link, and save comparisons locally on My ratings. Keep score pills rounded and the album header compact. Sort three albums by their current average; show a handshake between tied albums, and between all three when every average is equal.
 - **Centered journal intro:** this was the previous layout; the scroll walkthrough replaces it.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
