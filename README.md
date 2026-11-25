@@ -34,7 +34,7 @@ The current direction is an album journal with black-and-green dark colors, a so
 
 The featured card uses owner-maintained OWNER_FEATURED_PICK data: album ID or title and artist, optional cover URL, album average, and tracks containing name, score, and optional note. The current pick is “BAD ASS F*CKING KID” by Nettspend. The screenshot supplied the 15 track scores and 7.8 average. The “LAUGHIN” note is “Great beat but the flow was not it.” Update the owner setting and publish to change the public feature; the site is static, so a public on-page editor cannot publish changes for everyone. Notes added to this public featured card are visible to visitors. Sign in is a placeholder for now; real accounts are a later feature.
 
-The homepage no longer falls back to an automatically chosen chart album. Its listener photo is from [Amari Shutters on Unsplash](https://unsplash.com/photos/young-woman-with-headphones-listening-to-music-A6kViIz3cdQ) and is free to use under the Unsplash License.
+The homepage no longer falls back to an automatically chosen chart album. Its listener photo is supplied by the owner, has a transparent background, and is embedded in `index.html`.
 
 ## How it is built
 
@@ -54,8 +54,9 @@ The homepage no longer falls back to an automatically chosen chart album. Its li
 - **Direct score entry:** make the large score at the top of the rating dialog itself editable from 0 to 10 in one-tenth steps, alongside the slider, with no separate score box; keep the optional track note field full-width.
 - **Featured notes:** support optional public per-track notes and calculate the album average from the supplied scores when no explicit average is set.
 - **Theme and navigation:** move the light/dark switch into the sticky menu and apply both palettes to the whole page; hide the browser scrollbars while keeping scrolling enabled.
-- **Homepage photo:** replace the vinyl graphic with an editorial photo of a woman listening to music, tinted to match the selected theme.
+- **Homepage listener photo:** use the owner-supplied image with its background removed; enlarge the cutout on the welcome panel and embed it in the single-file page.
 - **Shared ratings:** ask for a username when creating a share link if none is saved, and label shared scores as listener ratings rather than official scores.
+- **Header and score colors:** keep the full menu and theme switch pinned together on every page; distinguish best tracks in lime, worst and very low scores in red, and keep other track scores neutral. Align homepage explainer copy and recently rated covers.
 - **Centered journal intro:** this was the previous layout; the scroll walkthrough replaces it.
 - **Page-load repair:** commit [bff70da](https://github.com/youngyoungyoungyoungyoungyoung/album/commit/bff70dae82f238da5b6d081a9101df81dce247e1) removed literal `\\n` text that had accidentally entered a JavaScript statement and stopped the app script from parsing.
 
@@ -76,5 +77,4 @@ Relevant commits:
 5. Rate a track, add a note, and confirm it appears on recent album cards and remains private in shared links.
 
 Start by reading this README and `index.html`, then continue from the checklist above.
-
 
