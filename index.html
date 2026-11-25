@@ -84,7 +84,9 @@ input:focus{outline:1px solid var(--accent);border-color:var(--accent)}
 .vh{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:0 0 16px}
 .vh .cover{width:min(100%,205px);border-radius:0}.vh h2{font:600 20px/1.1 "Oswald","Arial Narrow",sans-serif;text-transform:uppercase;margin:0;overflow-wrap:anywhere}
 .vh .a{color:var(--soft);font-size:11px}.vh .cnt{font-size:10px;color:var(--soft);text-transform:uppercase}.vh .btn{font-size:10px;padding:8px 10px}
-.vh.win{box-shadow:none}.crown{position:static;background:var(--mint);color:#111;font-weight:700;font-size:9px;letter-spacing:1px;padding:4px 7px;border-radius:0}
+.vh.win{outline:2px solid var(--mint);outline-offset:6px;border-radius:14px}
+.vs-cover-wrap{position:relative;width:min(100%,205px);flex:none}.vs-cover-wrap .cover{width:100%}
+.winner-crown{position:absolute;top:-13px;right:-10px;z-index:3;font-size:34px;line-height:1;transform:rotate(18deg);pointer-events:none}
 .vname{font-weight:700;color:var(--accent);letter-spacing:1.4px;font-size:10px}.vres{width:100%;text-align:left}.vres .res{padding:6px}.vres .res .cover{width:40px}
 .vs .tracks{grid-template-columns:1fr;margin-top:10px;gap:0}.vs .tr{padding:8px 2px;gap:5px;font-size:11px}.vs .tr .n{width:17px;font-size:9px}.vs .pill{min-width:32px;padding:2px 3px;font-size:10px}
 .verdict{text-align:left;font:600 23px/1.1 "Oswald","Arial Narrow",sans-serif;text-transform:uppercase;margin:5px 0 22px}.vs .head{display:block}
@@ -190,7 +192,7 @@ h3{margin:35px 0 16px;color:var(--ink);font:600 20px "DM Sans",system-ui,sans-se
 .tr:hover{background:var(--panel)}.tr .n{font-size:11px}.tr .nm{font-size:13px}.pill{border-radius:6px;font-size:11px}
 .tag{font-size:8px}.wrap.wide{max-width:none}.vs{gap:24px}.vh{gap:10px;padding-bottom:17px;border-bottom:1px solid var(--line)}
 .vh .cover{border-radius:10px}.vh h2{font:700 19px/1.15 "DM Sans",system-ui,sans-serif;letter-spacing:-.03em;text-transform:none}
-.vname{font-size:10px;color:var(--soft);letter-spacing:1px}.crown{border-radius:5px;background:var(--mint);color:#10211e}
+.vname{font-size:10px;color:var(--soft);letter-spacing:1px}
 .verdict{font:600 22px/1.2 "DM Sans",system-ui,sans-serif;letter-spacing:-.03em;text-transform:none}
 dialog{width:min(92vw,420px);border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:22px;box-shadow:none}
 dialog::backdrop{background:rgba(2,7,14,.72);backdrop-filter:none}.big{text-shadow:none;font-family:"DM Sans",system-ui,sans-serif}
@@ -1022,7 +1024,7 @@ function versus(s){
     if(err[k])return'<div class="slot"><div class="vh"><div class="msg">Could not load album '+name+'.</div><button class="btn ghost" data-ch="'+k+'">Choose another</button></div></div>';
     if(!a)return'<div class="slot"><div class="vh"><div class="msg">Loading…</div></div></div>';
     var m=avg(a),n=a.tracks.filter(function(t){return t.r!=null}).length,R=roles(a);
-    return'<div class="slot"><div class="vh'+(win===k?" win":"")+'">'+(win===k?'<span class="crown">WINNER</span>':'')+cover(a)+'<h2>'+esc(a.title)+'</h2><div class="a">'+esc(a.artist)+(a.year?" · "+esc(a.year):"")+'</div>'+ring(m)+'<div class="cnt">'+n+" / "+a.tracks.length+' tracks rated</div><button class="btn" data-all="'+k+'">'+(n?"Continue rating":"Rate tracks")+'</button><button class="btn ghost" data-ch="'+k+'">Change album</button></div><div class="tracks">'+a.tracks.map(function(t,i){return trk(a,i,R,true)}).join("")+'</div></div>'}
+    return'<div class="slot"><div class="vh'+(win===k?" win":"")+'"><div class="vs-cover-wrap">'+cover(a)+(win===k?'<span class="winner-crown" role="img" aria-label="Winning album">&#x1F451;</span>':'')+'</div><h2>'+esc(a.title)+'</h2><div class="a">'+esc(a.artist)+(a.year?" · "+esc(a.year):"")+'</div>'+ring(m)+'<div class="cnt">'+n+" / "+a.tracks.length+' tracks rated</div><button class="btn" data-all="'+k+'">'+(n?"Continue rating":"Rate tracks")+'</button><button class="btn ghost" data-ch="'+k+'">Change album</button></div><div class="tracks">'+a.tracks.map(function(t,i){return trk(a,i,R,true)}).join("")+'</div></div>'}
   function draw(){
     if(tok!==vtok)return;
     var am=al.map(function(a){return a?avg(a):null}),vd;
